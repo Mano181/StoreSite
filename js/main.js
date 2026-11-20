@@ -28,6 +28,12 @@ navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => s
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && hamburger?.getAttribute('aria-expanded') === 'true') { setDrawer(false); hamburger.focus(); }
 });
+document.addEventListener('click', e => {
+  if (hamburger?.getAttribute('aria-expanded') === 'true' &&
+      !navLinks?.contains(e.target) && !hamburger?.contains(e.target)) {
+    setDrawer(false);
+  }
+});
 
 // ── Active nav link ──
 const page = window.location.pathname.split('/').pop() || 'index.html';
@@ -38,15 +44,34 @@ document.querySelectorAll('.nav-links a, .footer-links a').forEach(a => {
 // ── Scroll reveal (stagger within each parent group) ──
 const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale, .wipe, .wire-steps');
 if ('IntersectionObserver' in window) {
+  const wipeParents = new Map();
   const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        if (wipeParents.has(e.target)) {
+          wipeParents.get(e.target).forEach(w => w.classList.add('visible'));
+        } else {
+          e.target.classList.add('visible');
+        }
+        observer.unobserve(e.target);
+      }
+    });
   }, { threshold: 0.12 });
   const seen = new Map();
   revealEls.forEach(el => {
-    const n = seen.get(el.parentElement) || 0;
-    seen.set(el.parentElement, n + 1);
-    el.style.setProperty('--rd', `${Math.min(n, 5) * 70}ms`);
-    observer.observe(el);
+    if (el.classList.contains('wipe')) {
+      const parent = el.parentElement;
+      const n = seen.get(parent) || 0;
+      seen.set(parent, n + 1);
+      el.style.setProperty('--rd', `${Math.min(n, 4) * 50}ms`);
+      if (!wipeParents.has(parent)) { wipeParents.set(parent, []); observer.observe(parent); }
+      wipeParents.get(parent).push(el);
+    } else {
+      const n = seen.get(el.parentElement) || 0;
+      seen.set(el.parentElement, n + 1);
+      el.style.setProperty('--rd', `${Math.min(n, 5) * 100}ms`);
+      observer.observe(el);
+    }
   });
 } else {
   revealEls.forEach(el => el.classList.add('visible'));
@@ -161,13 +186,38 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-// ── Switch plate: flip the rocker, then follow the link ──
-document.querySelectorAll('.rocker').forEach(r => r.addEventListener('click', e => {
-  if (reduceMotion || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
-  e.preventDefault();
-  r.classList.add('flip');
-  setTimeout(() => { window.location.href = r.href; }, 220);
-}));
+
+// ── Featured product videos: autoplay when in viewport, pause when out ──
+if (!reduceMotion) {
+  const featVids = [...document.querySelectorAll('.feat-media video')].filter(v => v.querySelector('source'));
+  featVids.forEach(v => {
+    v.muted = true;
+    v.closest('.feat-media')?.querySelector('.feat-placeholder')?.remove();
+  });
+
+  if (featVids.length) {
+    const inView = new Set();
+    featVids.forEach(v => {
+      let everSeen = false;
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) {
+          everSeen = true;
+          inView.add(v);
+          v.muted = true;
+          v.play().catch(() => {});
+        } else {
+          inView.delete(v);
+          if (everSeen) v.pause();
+        }
+      }, { threshold: 0.1 }).observe(v);
+    });
+    // Fallback: retry in-view videos on any user interaction
+    const tryPlay = () => inView.forEach(v => { v.muted = true; v.play().catch(() => {}); });
+    ['pointerdown', 'scroll', 'touchstart', 'keydown'].forEach(e =>
+      document.addEventListener(e, tryPlay, { passive: true, capture: true })
+    );
+  }
+}
 
 // ── Prefill contact form from ?category= and ?type= ──
 if (form) {
@@ -177,4 +227,12 @@ if (form) {
     const field = form.querySelector(`[name="${k === 'type' ? 'buyer_type' : k}"]`);
     if (v && field) field.value = v;
   });
+}
+
+// ── Brands marquee: pixel-perfect seamless loop ──
+const brandsTrack = document.querySelector('.brands-track');
+const brandsSet = document.querySelector('.brands-set');
+if (brandsTrack && brandsSet && !reduceMotion) {
+  const setW = brandsSet.offsetWidth;
+  brandsTrack.style.setProperty('--set-w', `${setW}px`);
 }

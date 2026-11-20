@@ -1,4 +1,5 @@
 import json, html, pathlib, re
+from urllib.parse import quote
 
 """Regenerates the site's HTML pages (and sitemap/robots/llms.txt once DOMAIN is set).
 
@@ -12,24 +13,43 @@ OUT = pathlib.Path(__file__).resolve().parent.parent
 DOMAIN = ""
 PHONE_TEL = "+917200523519"
 PHONE_DISP = "+91 72005 23519"
-EMAIL = "info@esanelectric.com"
+EMAIL = "boseelectrical.karaikal@gmail.com"
 WA = "https://wa.me/917200523519"
 NAME = "Esan Electric Company"
 # Brand name -> (logo file or None, wordmark colour). With no logo file the name is shown as a coloured wordmark;
 # drop the real logo into images/brands/ and set the path to use it.
 BRAND_STYLE = {
-    "Crompton": (None, "#1f4fa0"), "RR Kabel": (None, "#e30613"), "Legrand": ("images/brands/legrand.svg", None),
-    "Anchor": (None, "#d71920"), "Finolex": (None, "#1c3f94"), "CG": (None, "#0b5cab"), "Orient": (None, "#0057a8"),
+    # Logo files sourced from official sites / Wikipedia (Nov 2026).
+    # Brands without a logo file fall back to a coloured wordmark.
+    "Crompton": ("images/brands/crompton.svg",  "#003087"),
+    "RR Kabel": ("images/brands/rr-kabel.svg",  None),
+    "Legrand":  ("images/brands/legrand.svg",   None),
+    "Anchor":   ("images/brands/anchor.svg",    None),
+    "Finolex":  ("images/brands/finolex.svg",   None),
+    "CG":       ("images/brands/cg.svg", None),
+    "Orient":   ("images/brands/orient.svg",    None),
+    "L&T":      ("images/brands/lt.svg",        None),
+    "V-Guard":  ("images/brands/vguard.svg",    None),
+    "Polycab":  ("images/brands/polycab.png",   None),
+    "Venus":    ("images/brands/venus.png",     None),
+    # Wordmarks (no official logo found online)
+    "Kavaski": ("images/brands/kavaski.png", None),  # official logo; primary blue #00A0E3, accent red #FF2A03
+    "Lisha":    (None, "#cc0000"),
+    "Paragon":  (None, "#555555"),
+    "Orbit":    (None, "#2A7C51"),
+    "Almonard": (None, "#444444"),
+    "Atomberg": (None, "#1a73e8"),
+    "Norwood":  (None, "#c0392b"),
 }
 # Brands in the home page's scrolling strip (names supplied by the owner).
-BRANDS = ["Crompton", "RR Kabel", "Legrand", "Anchor", "Finolex"]
+BRANDS = ["Crompton", "Legrand", "Anchor", "Finolex", "RR Kabel", "V-Guard", "Venus", "Polycab", "Orient", "Atomberg", "CG", "Almonard", "Kavaski", "L&T"]
 
 
 def brand_mark(name):
     logo, color = BRAND_STYLE[name]
     if logo:
         return f'<img src="{logo}" alt="{html.escape(name)}" loading="lazy">'
-    return f'<span style="color:{color}">{html.escape(name)}</span>'
+    return f'<span class="brand-wordmark" style="color:{color}">{html.escape(name)}</span>'
 
 
 # ── SVG icon sprite (stroke icons, 24x24) ──
@@ -50,6 +70,9 @@ SYMBOLS = {
     "arrow": '<path d="M5 12h14M13 6l6 6-6 6"/>',
     "heater": '<rect x="6" y="2" width="12" height="20" rx="5"/><path d="M12 8c-1.6 2-2.5 3-2.5 4.4a2.5 2.5 0 0 0 5 0C14.5 11 13.6 10 12 8z"/>',
     "home": '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9"/>',
+    "play": '<polygon points="6,3 20,12 6,21"/>',
+    "download": '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+    "file-pdf": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><text x="8" y="18" font-size="5" fill="currentColor" stroke="none">PDF</text>',
 }
 SPRITE = '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">' + "".join(
     f'<symbol id="i-{k}" viewBox="0 0 24 24">{v}</symbol>' for k, v in SYMBOLS.items()) + "</svg>"
@@ -106,9 +129,7 @@ def head(title, desc, path, jsonld=None, noindex=False):
   <meta property="og:description" content="{html.escape(desc)}"/>
 {og_url}
   <link rel="icon" href="favicon.svg" type="image/svg+xml"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Manrope:wght@400;600;700&display=swap"/>
+  <link rel="stylesheet" href="fonts/fonts.css"/>
   <link rel="stylesheet" href="css/style.css"/>{ld}
 </head>
 <body>
@@ -117,14 +138,16 @@ def head(title, desc, path, jsonld=None, noindex=False):
 '''
 
 
-DROP_DESC = {"fans": "Ceiling, exhaust, table &amp; pedestal", "wires": "Copper house wire by the roll",
-             "lighting": "Bulbs, tubes, downlights &amp; battens", "switchgear": "MCBs, RCCBs &amp; distribution boards",
-             "heaters": "Storage and instant water heaters"}
+DROP_DESC = {"fans": "Ceiling, exhaust, table &amp; pedestal", "wires": "Copper wire and cables by the roll",
+             "lighting": "Bulbs, tubes, downlights &amp; battens", "switchgear": "Distribution boards, MCBs &amp; RCCBs",
+             "heaters": "Storage and instant water heaters",
+             "industrial_spare": "Industrial spare parts &amp; components",
+             "switches": "Modular switches &amp; accessories"}
 
 
 def nav(active):
     drop_items = "\n".join(
-        f'          <li><a href="{c["file"]}"><strong>{c["label"].replace("&", "&amp;")}</strong><span>{DROP_DESC[k]}</span></a></li>'
+        f'          <li><a href="{c["file"]}">{c["label"].replace("&", "&amp;")}</a></li>'
         for k, c in CATS.items())
     def a(href, label, key):
         cls = ' class="active" aria-current="page"' if key == active else ""
@@ -143,7 +166,6 @@ def nav(active):
 {drop_items}
         </ul>
       </li>
-{a("wholesale.html", "Our Process", "wholesale")}
 {a("contact.html", "Contact", "contact")}
       <li class="drawer-actions"><a href="tel:{PHONE_TEL}" class="da-call">{ic("phone")} Call</a><a href="{WA}" target="_blank" rel="noopener" class="da-wa">{ic("chat")} WhatsApp</a></li>
     </ul>
@@ -170,12 +192,13 @@ FOOTER = f'''
       <ul class="footer-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="products.html">Products</a></li>
-        <li><a href="fans.html">Fans</a></li>
+        <li><a href="fans.html">Fans &amp; Ventilation</a></li>
         <li><a href="wires.html">Wires &amp; Cables</a></li>
-        <li><a href="lighting.html">Lighting</a></li>
-        <li><a href="switchgear.html">MCB &amp; Switchgear</a></li>
+        <li><a href="lighting.html">Lighting Solutions</a></li>
+        <li><a href="switchgear.html">Distribution Box &amp; MCB</a></li>
         <li><a href="heaters.html">Water Heaters</a></li>
-        <li><a href="wholesale.html">Our Process</a></li>
+        <li><a href="industrial-spare.html">Industrial Spare</a></li>
+        <li><a href="switches.html">Switches &amp; Accessories</a></li>
         <li><a href="contact.html">Contact Us</a></li>
       </ul>
     </div>
@@ -183,7 +206,7 @@ FOOTER = f'''
       <h4>Contact</h4>
       <ul class="footer-contact">
         <li><a href="mailto:{EMAIL}">{ic("mail")} {EMAIL}</a></li>
-        <li><a href="contact.html">{ic("pin")} Tamil Nadu</a></li>
+        <li><a href="contact.html">{ic("pin")} Karaikal, Puducherry</a></li>
       </ul>
     </div>
   </div>
@@ -196,10 +219,6 @@ FOOTER = f'''
 <div class="floating-btns">
   <a href="tel:{PHONE_TEL}" class="float-btn ph" data-tip="Call Us" aria-label="Call us">{ic("phone")}</a>
   <a href="{WA}" target="_blank" rel="noopener" class="float-btn wa" data-tip="WhatsApp" aria-label="WhatsApp">{ic("chat")}</a>
-</div>
-<div class="mobile-bar">
-  <a href="tel:{PHONE_TEL}" class="mb-call">{ic("phone")} Call</a>
-  <a href="{WA}" target="_blank" rel="noopener" class="mb-wa">{ic("chat")} WhatsApp</a>
 </div>
 
 <script src="js/main.js"></script>
@@ -231,9 +250,7 @@ ORG = {
     "telephone": PHONE_TEL,
     "email": EMAIL,
     "areaServed": {"@type": "AdministrativeArea", "name": "Tamil Nadu, India"},
-    # Add streetAddress / addressLocality / postalCode here once the real address is known.
-    "address": {"@type": "PostalAddress", "addressRegion": "Tamil Nadu", "addressCountry": "IN"},
-    "openingHours": "Mo-Sa 09:00-19:00",
+    "address": {"@type": "PostalAddress", "streetAddress": "43/1, South Street, Jipmer Road, near Nilgiris supermarket", "addressLocality": "Karaikal", "addressRegion": "Puducherry", "postalCode": "609602", "addressCountry": "IN"},
     "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Product", "name": n}}
                    for n in ("Ceiling fans, exhaust fans, table and pedestal fans",
                              "Electrical wires and cables", "LED lighting", "MCB and switchgear", "Water heaters")],
@@ -242,83 +259,167 @@ ORG = {
 # ── Products: each category lists `types` x `brands`; a card is made for every pair. Groups feed the filter tabs. ──
 CATS = {
     "fans": {
-        "file": "fans.html", "label": "Fans", "icon": "fan", "img": "images/stock/fans.jpg",
+        "file": "fans.html", "label": "Fans & Ventilation", "icon": "fan", "img": "images/stock/fans.jpg",
+        "video": "RE2KY74dWqc",
         "blurb": "Ceiling, BLDC, exhaust, table &amp; pedestal fans",
         "title": "Wholesale Fans in Tamil Nadu — Ceiling, BLDC, Exhaust, Table | Esan Electric",
         "desc": "Wholesale ceiling fans, BLDC fans, exhaust fans, table and pedestal fans for retail shops, dealers and contractors across Tamil Nadu. Bulk rates on request.",
         "h1": "Wholesale Fans",
         "lead": "Ceiling, BLDC, exhaust, table and pedestal fans for shops, dealers and project buyers across Tamil Nadu.",
-        # (tab group, card label, image). One card per brand is made for each type; brands are owner-confirmed only for fans.
-        "types": [("Ceiling Fans", "Ceiling Fan", "images/Products/ceiling-fans/standard-fan.png"),
-                  ("Exhaust Fans", "Exhaust Fan", "images/stock/exhaust-fan.jpg"),
-                  ("Table &amp; Pedestal", "Table &amp; Pedestal Fan", "images/stock/table-pedestal-fan.jpg")],
-        "brands": ["Crompton", "CG", "Anchor", "Orient"],
-    },
-    "wires": {
-        "file": "wires.html", "label": "Wires & Cables", "icon": "plug", "img": "images/stock/wires.jpg",
-        "blurb": "Copper house wire and cables by the roll",
-        "title": "Bulk Electrical Wires & Cables Supplier in Tamil Nadu | Esan Electric",
-        "desc": "Bulk copper house wires and electrical cables for retail shops, electricians, contractors and builders across Tamil Nadu. Per-roll and bulk rates on request.",
-        "h1": "Wires &amp; Cables",
-        "lead": "Copper house wire and cables supplied by the roll for shops, electricians, contractors and builders across Tamil Nadu.",
-        "types": [("House Wire", "House Wire", "images/stock/wires.jpg")],
-        "brands": ["RR Kabel", "Anchor"],
+        # (tab group, card label, image, brands). Per-type brand lists; brand_cards() uses the 4th element when present.
+        "types": [
+            ("Standard",   "Fan (All types)", "images/Products/covers/anchor-fans-001.jpg",        ["Anchor"]),
+            ("Standard",   "Fan (All types)", "images/Products/covers/crompton-fans-01.jpg",      ["Crompton"], True),
+            ("Standard",   "Fans (Smart &amp; BLDC)", "images/Products/covers/atomberg-fans-001.jpg", ["Atomberg"]),
+            ("Standard",   "Fans (Ceiling, Exhaust &amp; Wall Mount)", "images/Products/ceiling-fans/cg-cover.jpg", ["CG"], True),
+            ("Standard",   "Fans (Industrial Wall, Pedestal, Ceiling &amp; Exhaust fans)", "images/Products/covers/almanord-fans-001.jpg", ["Almonard"]),
+            ("Decorative", "Decorative Fan", "images/Products/covers/orient-fans-001.jpg",        ["Orient"]),
+        ],
+        "brands": [],
+        "catalogs": [
+            ("Orient Fans Catalogue 2025",         "pdfs/orient-fans-catalogue-2025.pdf"),
+            ("Atomberg Fans Catalogue — Summer 2026", "pdfs/atomberg-fans-catalogue-2026.pdf"),
+            ("Crompton BLDC Ceiling Fans",          "pdfs/crompton-bldc-fans.pdf"),
+            ("Crompton Fans Catalogue",             "pdfs/crompton-fans-catalogue.pdf"),
+        ],
     },
     "lighting": {
-        "file": "lighting.html", "label": "Lighting", "icon": "bulb", "img": "images/stock/lighting.jpg",
+        "file": "lighting.html", "label": "Lighting Solutions", "icon": "bulb", "img": "images/stock/lighting.jpg",
+        "video": "StcpNahIIos",
         "blurb": "Bulbs, tubes, downlights &amp; battens",
         "title": "Wholesale LED Lights, Bulbs & Tubes in Tamil Nadu | Esan Electric",
         "desc": "Wholesale LED bulbs, tube lights, downlights and battens for retail shops, dealers and contractors across Tamil Nadu. Bulk rates on request.",
         "h1": "Wholesale LED Lighting",
         "lead": "LED bulbs, tubes, downlights and battens for dealers, contractors and builders across Tamil Nadu.",
-        "types": [("Bulbs &amp; Tubes", "LED Bulbs &amp; Tubes", "images/stock/led-bulb.jpg"),
-                  ("Downlights &amp; Battens", "Downlights &amp; Battens", "images/stock/lighting.jpg")],
+        "types": [
+            ("Standard",    "Standard Lighting",    "images/stock/led-bulb.jpg"),
+            ("Decorative",  "Decorative Lighting",  "images/stock/lighting.jpg"),
+            ("Industrial",  "Industrial Lighting",  "images/stock/lighting.jpg"),
+        ],
         "brands": ["Crompton", "Anchor"],
     },
-    "switchgear": {
-        "file": "switchgear.html", "label": "MCB & Switchgear", "icon": "switch", "img": "images/stock/switchgear.jpg",
-        "blurb": "MCBs, RCCBs, isolators &amp; distribution boards",
-        "title": "Wholesale MCB & Switchgear in Tamil Nadu — MCB, RCCB, Distribution Boards | Esan Electric",
-        "desc": "Wholesale MCBs, MCCBs, RCCBs, isolators and distribution boards for retail shops, electricians, contractors and builders across Tamil Nadu. Bulk rates on request.",
-        "h1": "MCB &amp; Switchgear",
-        "lead": "Circuit breakers, earth-leakage protection, isolators and distribution boards for shops, electricians, contractors and builders across Tamil Nadu.",
-        "types": [("Breakers", "MCB &amp; Breakers", "images/stock/switchgear.jpg"),
-                  ("Switches &amp; Boards", "Switches &amp; Distribution Boards", "images/stock/distribution-board.jpg")],
-        "brands": ["Legrand", "Anchor"],
+    "switches": {
+        "file": "switches.html", "label": "Switches & Accessories", "icon": "switch", "img": "images/stock/switches.jpg",
+        "video": "dmk7sjuuM6E",
+        "blurb": "Modular switches &amp; accessories",
+        "title": "Wholesale Switches & Accessories in Tamil Nadu | Esan Electric",
+        "desc": "Wholesale modular switches, switch plates and accessories for retail shops, electricians, contractors and builders across Tamil Nadu. Bulk rates on request.",
+        "h1": "Switches &amp; Accessories",
+        "lead": "Modular switches and accessories for shops, electricians, contractors and builders across Tamil Nadu.",
+        "types": [
+            ("All", "Allzy",           "images/Products/covers/legrand-allzy-01.jpg",   ["Legrand"]),
+            ("All", "Myrius",          "images/Products/covers/legrand-myrius-01.jpg",  ["Legrand"]),
+            ("All", "Kosmo",           "images/Products/covers/kavaski-kosmo-01.jpg",   ["Kavaski"]),
+            ("All", "Anchor Switches", "images/Products/covers/anchor-switches-01.jpg", ["Anchor"]),
+        ],
+        "brands": [],
+        "catalogs": [
+            ("Anchor Metal Boxes Price List", "pdfs/anchor-metal-boxes-pricelist.pdf"),
+        ],
     },
-    # Provisional: the owner supplies water heaters but has not yet sent brands, types or photos.
+    "wires": {
+        "file": "wires.html", "label": "Wires & Cables", "icon": "plug", "img": "images/stock/wires.jpg",
+        "video": "dKHI52dC7j0",
+        "blurb": "Copper wire and cables by the roll",
+        "title": "Bulk Electrical Wires & Cables Supplier in Tamil Nadu | Esan Electric",
+        "desc": "Bulk copper house wires and electrical cables for retail shops, electricians, contractors and builders across Tamil Nadu. Per-roll and bulk rates on request.",
+        "h1": "Wires &amp; Cables",
+        "lead": "Copper house wire and cables supplied by the roll for shops, electricians, contractors and builders across Tamil Nadu.",
+        "types": [
+            ("Wire", "House Wires (90, 180 &amp; 300 Mtrs)", "images/Products/covers/finolex-wire-02.jpg", ["Finolex"]),
+            ("Wire", "House Wires (Project &amp; Industry)", "images/Products/covers/rr-kabel-wire-01.jpg", ["RR Kabel"]),
+            ("Wire", "House Wire", "images/Products/covers/norwood-wire-01.jpg",   ["Norwood"]),
+            ("Wire", "House Wires (90 &amp; 180 Mtrs)",    "images/stock/wires.jpg",                       ["Polycab"]),
+            ("Wire", "House Wire", "images/stock/wires.jpg",                       ["Orient"]),
+            ("Cable", "Cable",     "images/Products/covers/orbit-cable-1.jpg",     ["Orbit"]),
+            ("Cable", "Cable",     "images/stock/cable.jpg",                       ["Paragon"]),
+            ("Cable", "HT Cable Catalogue", "images/Products/covers/polycab-ht-cable-01.jpg", ["Polycab"]),
+        ],
+        "brands": [],
+        "catalogs": [
+            ("Finolex Cables Price List — Oct 2026",        "pdfs/finolex-cables-pricelist-2026.pdf"),
+            ("RR Kabel Price List (Project &amp; Industry)", "pdfs/rr-kabel-pricelist.pdf"),
+            ("Orbit Cables Price List",                     "pdfs/orbit-cables-pricelist.pdf"),
+            ("Norwood Wire &amp; Cable Price List — Aug 2026", "pdfs/norwood-wire-cable-pricelist-2026.pdf"),
+        ],
+    },
+    "switchgear": {
+        "file": "switchgear.html", "label": "Distribution Box & MCB", "icon": "switch", "img": "images/stock/switchgear.jpg",
+        "video": "uXgtDtYxHdk",
+        "blurb": "Distribution boards, MCBs &amp; RCCBs",
+        "title": "Wholesale Distribution Boards & MCB in Tamil Nadu | Esan Electric",
+        "desc": "Wholesale distribution boards, MCBs, MCCBs, RCCBs and isolators for retail shops, electricians, contractors and builders across Tamil Nadu. Bulk rates on request.",
+        "h1": "Distribution Box &amp; MCB",
+        "lead": "Distribution boards, circuit breakers and earth-leakage protection for shops, electricians, contractors and builders across Tamil Nadu.",
+        "types": [
+            ("All", "Distribution Board (AC box, Enclosures, &amp; DBs)", "images/Products/covers/legrand-db-01.jpg",    ["Legrand"]),
+            ("All", "MCB, RCCB, Timers &amp; RCBO",                        "images/Products/covers/legrand-mcb-01.jpg",   ["Legrand"]),
+            ("All", "MCCB",                                                 "images/Products/covers/legrand-mccb-01.jpg",  ["Legrand"]),
+            ("All", "Surge Protecting Device (SPD)",                        "images/Products/covers/legrand-spd-01.jpg",   ["Legrand"]),
+            ("All", "Phase Selector (Rotary) DB",                          "images/Products/covers/legrand-phase-01.jpg", ["Legrand"]),
+        ],
+        "brands": [],
+    },
     "heaters": {
-        "file": "heaters.html", "label": "Water Heaters", "icon": "heater", "img": None,
-        "blurb": "Water heaters for homes, shops &amp; projects",
+        "file": "heaters.html", "label": "Water Heaters", "icon": "heater", "img": "images/stock/heaters.jpg",
+        "video": "VzTQTrrfJXc",
+        "blurb": "Storage and instant water heaters",
         "title": "Wholesale Water Heaters in Tamil Nadu | Esan Electric",
         "desc": "Wholesale water heaters for retail shops, dealers, electricians, contractors and builders across Tamil Nadu. Bulk rates on request.",
         "h1": "Water Heaters",
         "lead": "Water heaters for shops, dealers, electricians, contractors and builders across Tamil Nadu.",
-        "types": [("Water Heaters", "Water Heater", None)],
+        "types": [
+            ("All", "Water Heater", "images/Products/covers/venus-heater-web.jpg",   ["Venus"]),
+            ("All", "Water Heater", "images/Products/covers/vguard-heater-web.jpg",  ["V-Guard"]),
+            ("All", "Water Heater", "images/Products/covers/crompton-heater-web.jpg", ["Crompton"]),
+        ],
         "brands": [],
+        "catalogs": [
+            ("Venus Splash Pro — Catalogue",    "pdfs/venus-splash-pro-catalogue.pdf"),
+            ("Venus Splash Copper — Catalogue", "pdfs/venus-splash-copper-catalogue.pdf"),
+        ],
+    },
+    "industrial_spare": {
+        "file": "industrial-spare.html", "label": "Industrial Spare", "icon": "bolt", "img": "images/stock/industrial-spare.jpg",
+        "video": "wgoNMFOCTlQ",
+        "blurb": "Industrial spare parts &amp; components",
+        "title": "Wholesale Industrial Spare Parts in Tamil Nadu | Esan Electric",
+        "desc": "Wholesale industrial spare parts and electrical components for contractors, builders and industrial buyers across Tamil Nadu. Bulk rates on request.",
+        "h1": "Industrial Spare",
+        "lead": "Industrial spare parts and components for contractors, builders and industrial buyers across Tamil Nadu.",
+        "types": [("Industrial Spare", "Industrial Spare Part", None)],
+        "brands": ["L&T"],
     },
 }
 
 
 def brand_cards(cat):
-    """(group, label, brand, image) for every type x brand of a category."""
+    """(group, label, brand, image, combined) for every type x brand of a category.
+    5th element `True` renders label+brand as a single combined line instead of separate type/brandname."""
     c = CATS[cat]
-    return [(g, label, br, img) for g, label, img in c["types"] for br in c["brands"]]
+    result = []
+    for item in c["types"]:
+        g, label, img = item[0], item[1], item[2]
+        brands = item[3] if len(item) > 3 else c["brands"]
+        combined = item[4] if len(item) > 4 else False
+        for br in brands:
+            result.append((g, label, br, img, combined))
+    return result
 
 
-def product_card(cat, group, label, brand, img):
+def product_card(cat, group, label, brand, img, combined=False):
     title = f"{label} - {brand}"
     attr = html.escape(html.unescape(title), quote=True)
-    thumb = (pic(img, attr, "(max-width:560px) 100vw, (max-width:1024px) 50vw, 400px", "fit" if img.startswith("images/Products/") else "") if img else ic(CATS[cat]["icon"]))
-    # A brand catalogue PDF dropped into pdfs/<slug>.pdf turns the card into a download link on the next build.
+    thumb = (pic(img, attr, "(max-width:560px) 100vw, (max-width:1024px) 50vw, 400px") if img else ic(CATS[cat]["icon"]))
+    # A brand catalogue PDF dropped into pdfs/<slug>.pdf turns the card into a link on the next build.
     slug = re.sub(r"[^a-z0-9]+", "-", html.unescape(title).lower()).strip("-")
     pdf = f"pdfs/{slug}.pdf"
     link = (f' href="{pdf}" target="_blank" rel="noopener"') if (OUT / pdf).exists() else ""
     tag = "a" if link else "article"
-    hint = '<span class="p-pdf">Download PDF →</span>' if link else ""
+    body = f'<div class="p-body"><h3 class="p-brandname p-combined" aria-label="{attr}">{html.unescape(label)} - {brand}</h3></div>'
     return f'''      <{tag} class="product-card reveal" data-group="{group}"{link}>
         <div class="p-thumb">{thumb}</div>
-        <div class="p-body"><span class="p-type">{label}</span><h3 class="p-brandname" aria-label="{attr}">{brand_mark(brand)}</h3>{hint}</div>
+        {body}
       </{tag}>
 '''
 
@@ -327,7 +428,7 @@ def category_page(key):
     c = CATS[key]
     label = c["h1"].replace("&amp;", "&")
     products = []
-    for i, (_g, label, br, img) in enumerate(brand_cards(key)):
+    for i, (_g, label, br, img, _combined) in enumerate(brand_cards(key)):
         prod = {"@type": "Product", "name": html.unescape(f"{label} - {br}"), "category": c["label"]}
         if img and DOMAIN:
             prod["image"] = f"{DOMAIN}/{img}"
@@ -352,19 +453,12 @@ def category_page(key):
 <section class="products-section">
   <div class="container">
 {tabs}'''
-    # Godown rack: one labelled shelf per type group
-    for i, g in enumerate(groups):
+    s += '    <div class="products-grid">\n'
+    for g in groups:
         cards = [b for b in brand_cards(key) if b[0] == g]
-        if cards:
-            s += f'''    <section class="rack" data-group="{g}" aria-label="{g}">
-      <div class="rack-tag">Rack {chr(65 + i)} · {g}</div>
-      <div class="products-grid">
-''' + "\n".join(product_card(key, *b) for b in cards) + '''      </div>
-    </section>
-'''
-    if not c["brands"]:
-        s += f'''    <div class="brands-soon">{ic(c["icon"])}<div><h3>Brands coming soon</h3><p>We supply {c["label"].lower()}. Tell us what you need and we will send a quote.</p><a href="contact.html?category={key}" class="text-link">Request a quote {ic("arrow")}</a></div></div>
-'''
+        s += "\n".join(product_card(key, *b) for b in cards)
+    s += '    </div>\n'
+    wa_text = quote(f"Hi Esan Electric, I would like wholesale rates for {c['label']}.")
     s += '''    <p class="back-link"><a href="products.html">← All categories</a></p>
   </div>
 </section>
@@ -373,10 +467,12 @@ def category_page(key):
     return s + FOOTER
 
 
-def cat_cards(h="h3"):
+def cat_cards(h="h3", exclude=()):
     out = ""
     for n, (k, c) in enumerate(CATS.items(), 1):
-        out += f'''      <a href="{c["file"]}" class="cat-card reveal-scale">
+        if k in exclude:
+            continue
+        out += f'''      <a href="{c["file"]}" class="cat-card reveal">
         <div class="cat-thumb{"" if c["img"] else " cat-icon"}">{pic(c["img"], "", "(max-width:1024px) 100vw, 40vw") if c["img"] else ic(c["icon"])}</div>
         <div class="cat-info">
           <div class="cat-idx">0{n}</div>
@@ -389,14 +485,29 @@ def cat_cards(h="h3"):
     return out
 
 
-def switch_plate():
+def video_grid():
+    """Featured product cards: video on top, text below.
+    Automatically includes <source> when videos/<key>.mp4 exists next to build_pages.py's output dir."""
     out = ""
-    for n, (k, c) in enumerate(CATS.items(), 1):
-        out += f'''      <a href="{c["file"]}" class="rocker" role="listitem">
-        <span class="rk-win" aria-hidden="true">{pic(c["img"], "", "(max-width:560px) 45vw, 18vw") if c["img"] else ic(c["icon"])}</span>
-        <span class="rk-led" aria-hidden="true"></span>
-        <span class="rk-key" aria-hidden="true">{ic(c["icon"])}</span>
-        <span class="rk-label"><small>0{n}</small>{c["label"].replace("&", "&amp;")}</span>
+    for k, c in CATS.items():
+        if k == "industrial_spare":
+            continue
+        label = c["label"].replace("&", "&amp;")
+        sizes = "(max-width:1024px) 50vw, 25vw"
+        if (OUT / f"videos/{k}.mp4").exists():
+            poster = c["img"].rsplit(".", 1)[0] + "-640.webp"
+            media = f'''<video poster="{poster}" muted loop playsinline preload="none" aria-hidden="true">
+            <source src="videos/{k}.mp4" type="video/mp4">
+          </video>'''
+        else:
+            media = pic(c["img"], "", sizes)
+        out += f'''      <a href="{c["file"]}" class="feat-card reveal">
+        <div class="feat-media">
+          {media}
+        </div>
+        <div class="feat-info">
+          <h3>{label}</h3>
+        </div>
       </a>
 '''
     return out
@@ -406,13 +517,11 @@ def products_page():
     s = head("Wholesale Fans, Wires & LED Lighting — Product Range | Esan Electric",
              "Browse Esan Electric's wholesale range: fans, wires and cables, LED lighting, MCB switchgear and water heaters for retail shops, dealers and contractors across Tamil Nadu.",
              "products.html") + nav("products")
-    s += page_hero("Product Range", "What We Supply",
-                   "Five focused categories, supplied wholesale to shops, dealers, contractors and builders across Tamil Nadu.")
     s += f'''
 <section class="products-section">
   <div class="container">
     <div class="bento">
-{cat_cards()}    </div>
+{cat_cards(exclude=("industrial_spare",))}    </div>
   </div>
 </section>
 </main>
@@ -426,30 +535,33 @@ def index_page():
              "index.html", [ORG]) + nav("home")
     strip = ""
     if BRANDS:
-        def tags(extra=""):
-            return "".join(f'<li{extra} style="--sw:{(-3, 2.5, -2, 3.5)[i % 4]}deg">{brand_mark(b)}</li>' for i, b in enumerate(BRANDS))
-        marks = tags() + tags(' aria-hidden="true" class="dup"') * 2
+        items = "".join(f'<div>{brand_mark(b)}</div>' for b in BRANDS)
         strip = f'''
 <section class="brands" aria-label="Brands we stock">
-  <div class="container"><span class="brands-label">Dealer &amp; stockist of</span></div>
-  <div class="brands-belt"><ul>{marks}</ul></div>
+  <div class="container">
+    <span class="brands-label">Distributor &amp; stockist of</span>
+  </div>
+  <div class="brands-track">
+    <div class="brands-set">{items}</div>
+    <div class="brands-set" aria-hidden="true">{items}</div>
+  </div>
 </section>'''
     shelf = f'''<figure class="hero-photo">
         {pic("images/stock/hero.jpg", "A ceiling fan and brass pendant lamps", "(max-width:1024px) 100vw, 40vw", eager=True)}
       </figure>'''
-    # Order dockets: who we supply (owner's three customer types plus homes)
-    sectors = "".join(f"""      <article class="docket reveal">
-        <div class="docket-head"><span>Docket No. {i + 1:02d}</span><span class="docket-stamp">{lot}</span></div>
-        <div class="docket-photo">{pic(f"images/stock/{img}.jpg", "", "(max-width:600px) 100vw, (max-width:1024px) 50vw, 25vw")}</div>
-        <h3>{t}</h3>
-        <p>{p}</p>
+    # Sector cards: who we supply (clean photo card style)
+    sectors = "".join(f"""      <article class="sector-card reveal">
+        <div class="sector-photo">{pic(f"images/stock/{img}.jpg", "", "(max-width:600px) 100vw, (max-width:1024px) 50vw, 25vw")}</div>
+        <div class="sector-body">
+          <h3>{t}</h3>
+        </div>
       </article>
-""" for i, (img, lot, t, p) in enumerate([
-        ("sector-shop", "Shop lots", "Retail shops &amp; dealers", "Restock fast-moving fans, wires and lights at wholesale rates, in lot sizes that suit a shop."),
-        ("sector-electrician", "Job lots", "Electricians", "Wire, fans and fittings for the jobs you take on, quoted together in one list."),
-        ("sector-site", "Project lots", "Contractors", "Project quantities of wire, fans and lighting, delivered to your site within Tamil Nadu."),
-        ("sector-home", "Home sets", "Homes &amp; apartments", "Ceiling fans, house wire and LED lighting for residential projects."),
-    ]))
+""" for img, t, p in [
+        ("sector-shop", "Retail shops &amp; dealers", "Restock fast-moving fans, wires and lights at wholesale rates, in lot sizes that suit a shop."),
+        ("sector-electrician", "Electricians", "Wire, fans and fittings for the jobs you take on, quoted together in one list."),
+        ("sector-site", "Contractors", "Project quantities of wire, fans and lighting, delivered to your site within Tamil Nadu."),
+        ("sector-home", "Homes &amp; apartments", "Ceiling fans, house wire and LED lighting for residential projects."),
+    ])
     why = "".join(f"""        <li class="why-item reveal">
           <span class="why-n">0{n}</span>
           <div>
@@ -462,7 +574,7 @@ def index_page():
         ("tag", "Wholesale rates", "Rates are quoted on request and depend on quantity, with bulk benefits on larger orders."),
         ("clock", "Quotes within an hour", "Send your list and we reply with rates within an hour."),
         ("truck", "Supply across Tamil Nadu", "We supply to shops, sites and godowns within Tamil Nadu."),
-        ("phone", "Talk to a person", "Call, WhatsApp or use the form, Mon–Sat, 9 AM–7 PM."),
+        ("phone", "Talk to a person", "Call, WhatsApp or use the form — we reply promptly."),
     ], 1))
     steps = "".join(f"""        <li class="reveal">
           <span class="step-num">0{n}</span>
@@ -489,9 +601,7 @@ def index_page():
       <p class="hero-sub">Stock your shop or supply your next project. Esan Electric supplies fans, wires &amp; cables, LED lighting, MCB switchgear and water heaters to retail shops, dealers, contractors and builders across Tamil Nadu.</p>
       <div class="hero-btns">
         <a href="products.html" class="btn-hero-primary">Browse Products {ic("arrow")}</a>
-        <span class="open-chip" id="openChip"><span class="dot"></span><span class="oc-text">Mon–Sat, 9 AM–7 PM</span></span>
       </div>
-      </ol>
     </div>
     <div class="hero-media">
       {shelf}
@@ -505,27 +615,22 @@ def index_page():
       <div>
         <span class="docket-eyebrow">Featured products</span>
         <h2 class="wipe">What we supply.</h2>
-        <p>Crafting Spaces, Powering Progress</p>
       </div>
       <a href="products.html" class="text-link">View all products {ic("arrow")}</a>
     </div>
-    <div class="plate" role="list">
-{switch_plate()}    </div>
+    <div class="featured-grid">
+{video_grid()}    </div>
   </div>
 </section>
 {strip}
 <section class="sectors">
   <div class="container">
     <div class="section-head center">
-      <h2 class="wipe">Solutions for Every Electrical Need</h2>
-      <p>Whatever your order size, we have a route for you.</p>
+      <span class="section-eyebrow">Our Expertise</span>
+      <h2 class="wipe">Solutions for Every Sector</h2>
     </div>
-    <div class="dockets">
+    <div class="sector-grid">
 {sectors}    </div>
-    <div class="route-pick reveal">
-      <a href="contact.html?type=retail" class="route"><span class="route-q">Run a shop?</span><span class="route-a">Request dealer rates {ic("arrow")}</span></a>
-      <a href="contact.html?type=contractor" class="route route-hot"><span class="route-q">On a project?</span><span class="route-a">Request a project quote {ic("arrow")}</span></a>
-    </div>
   </div>
 </section>
 
@@ -544,7 +649,6 @@ def index_page():
   <div class="container">
     <div class="process-head">
       <h2 class="wipe">Our simple ordering process</h2>
-      <p>From your list to your shop or site in three steps.</p>
     </div>
     <ol class="wire-steps">
 {steps}    </ol>
@@ -668,13 +772,6 @@ def contact_page():
             <a href="mailto:{EMAIL}">{EMAIL}</a>
           </div>
         </div>
-        <div class="info-card">
-          <div class="i-icon">{ic("clock")}</div>
-          <div>
-            <h4>Business Hours</h4>
-            <p>Mon – Sat: 9:00 AM – 7:00 PM<br>Sunday: Closed</p>
-          </div>
-        </div>
 
         <div class="map-box">{ic("pin")} Add Google Maps embed here</div>
       </div>
@@ -685,6 +782,7 @@ def contact_page():
         <form id="inquiryForm" action="https://api.web3forms.com/submit" method="POST" novalidate>
           <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY"/>
           <input type="hidden" name="subject" value="New wholesale enquiry — Esan Electric"/>
+          <input type="checkbox" name="botcheck" hidden tabindex="-1" autocomplete="off"/>
           <div class="form-row">
             <div class="form-group">
               <label for="f-name">Full name</label>
@@ -692,7 +790,7 @@ def contact_page():
             </div>
             <div class="form-group">
               <label for="f-phone">Phone number</label>
-              <input id="f-phone" type="tel" name="phone" placeholder="+91 XXXXX XXXXX" autocomplete="tel" required/>
+              <input id="f-phone" type="tel" name="phone" placeholder="+91 XXXXX XXXXX" autocomplete="tel" inputmode="tel" pattern="[0-9+ \\-]{{10,15}}" required/>
             </div>
           </div>
           <div class="form-row">
@@ -702,6 +800,8 @@ def contact_page():
                 <option value="">— Select —</option>
                 <option value="retail">Retail shop / dealer</option>
                 <option value="contractor">Contractor / builder</option>
+                <option value="electrician">Electrician</option>
+                <option value="homeowner">Homeowner</option>
                 <option value="other">Other</option>
               </select>
             </div>
@@ -752,7 +852,7 @@ def not_found_page():
 
 
 files = {"index.html": index_page(), "products.html": products_page(),
-         "wholesale.html": wholesale_page(), "contact.html": contact_page(),
+         "contact.html": contact_page(),
          "404.html": not_found_page()}
 for k, c in CATS.items():
     files[c["file"]] = category_page(k)
@@ -764,7 +864,7 @@ for name, content in files.items():
     '<path d="M18 5 8 18h7l-1 9 10-13h-7z" fill="#ffffff"/></svg>\n', encoding="utf-8", newline="\n")
 
 # ── root files ──
-pages = ["index.html", "products.html", "fans.html", "wires.html", "lighting.html", "switchgear.html", "heaters.html", "wholesale.html", "contact.html"]
+pages = ["index.html", "products.html"] + [c["file"] for c in CATS.values()] + ["contact.html"]
 root_files = {}
 if DOMAIN:
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -789,7 +889,7 @@ if DOMAIN:
         "- Service area: Tamil Nadu only\n\n"
         "## How to buy\n"
         f"Request rates via the enquiry form, phone {PHONE_DISP}, WhatsApp {WA}, or email {EMAIL}. "
-        "We reply within an hour. Business hours: Mon-Sat 9:00 AM-7:00 PM.\n\n"
+        "We reply within an hour.\n\n"
         "## Pages\n" + "".join(f"- [{p}]({DOMAIN}/{p})\n" for p in pages))
 for name in ("sitemap.xml", "robots.txt", "llms.txt"):
     f = OUT / name
