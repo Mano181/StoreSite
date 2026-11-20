@@ -1,4 +1,4 @@
-name: Claude PR Review
+name: AI PR Review
 
 on:
   pull_request:
@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  models: read
 
 jobs:
   review:
@@ -17,10 +18,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Review with Claude
+      - name: Review with GitHub Models
         id: review
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 - <<'PYEOF'
           import os, json, urllib.request, subprocess, sys
@@ -45,24 +46,23 @@ jobs:
           )
 
           payload = json.dumps({
-              "model": "claude-haiku-4-5-20251001",
-              "max_tokens": 1024,
-              "messages": [{"role": "user", "content": prompt}]
+              "model": "gpt-4o-mini",
+              "messages": [{"role": "user", "content": prompt}],
+              "max_tokens": 1024
           }).encode()
 
           req = urllib.request.Request(
-              'https://api.anthropic.com/v1/messages',
+              'https://models.inference.ai.azure.com/chat/completions',
               data=payload,
               headers={
-                  'x-api-key': os.environ['ANTHROPIC_API_KEY'],
-                  'anthropic-version': '2023-06-01',
+                  'Authorization': f"Bearer {os.environ['GITHUB_TOKEN']}",
                   'content-type': 'application/json',
               }
           )
           with urllib.request.urlopen(req) as resp:
               result = json.loads(resp.read())
 
-          text = result['content'][0]['text'].strip()
+          text = result['choices'][0]['message']['content'].strip()
           approved = text.upper().startswith('APPROVED')
 
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
@@ -74,9 +74,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ICON="${{ steps.review.outputs.approved == 'true' && '✅' || '❌' }}"
+          ICON=$([[ "${{ steps.review.outputs.approved }}" == "true" ]] && echo "✅" || echo "❌")
           gh pr comment ${{ github.event.pull_request.number }} \
-            --body "**Claude Review** $ICON
+            --body "**AI Review** $ICON
 
           ${{ steps.review.outputs.review }}"
 
@@ -86,7 +86,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr review ${{ github.event.pull_request.number }} \
-            --approve --body "Approved by Claude"
+            --approve --body "Approved by AI Review"
           gh pr merge ${{ github.event.pull_request.number }} \
             --squash --delete-branch \
             --subject "$(gh pr view ${{ github.event.pull_request.number }} --json title -q .title)"
