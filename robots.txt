@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mano181.github.io/StoreSite/sitemap.xml

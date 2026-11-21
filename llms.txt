@@ -1,0 +1,29 @@
+# Esan Electric Company
+
+> Wholesale supplier of fans, wires & cables, LED lighting, MCB switchgear and water heaters for retail shops, dealers, contractors and builders in Tamil Nadu, India. Prices are quoted on request.
+
+## What we sell
+- Fans: ceiling (standard, BLDC, designer, high-speed), exhaust, table and pedestal fans
+- Wires & cables: copper house wire by the roll and in bulk
+- Lighting: LED bulbs, tube lights, downlights and battens
+- MCB & switchgear: MCBs, MCCBs, RCCBs, isolators and distribution boards
+- Water heaters
+
+## Who we supply
+- Retail shops and dealers restocking in wholesale lots
+- Contractors and builders needing project quantities
+- Service area: Tamil Nadu only
+
+## How to buy
+Request rates via the enquiry form, phone +91 72005 23519, WhatsApp https://wa.me/917200523519, or email boseelectrical.karaikal@gmail.com. We reply within an hour.
+
+## Pages
+- [index.html](https://mano181.github.io/StoreSite/index.html)
+- [products.html](https://mano181.github.io/StoreSite/products.html)
+- [fans.html](https://mano181.github.io/StoreSite/fans.html)
+- [lighting.html](https://mano181.github.io/StoreSite/lighting.html)
+- [switches.html](https://mano181.github.io/StoreSite/switches.html)
+- [wires.html](https://mano181.github.io/StoreSite/wires.html)
+- [switchgear.html](https://mano181.github.io/StoreSite/switchgear.html)
+- [heaters.html](https://mano181.github.io/StoreSite/heaters.html)
+- [contact.html](https://mano181.github.io/StoreSite/contact.html)
