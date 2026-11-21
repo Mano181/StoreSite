@@ -11,6 +11,7 @@ OUT = pathlib.Path(__file__).resolve().parent.parent
 # Set to the real site URL (no trailing slash), e.g. "https://www.example.com", once hosting is chosen.
 # While empty, canonical/og:url, absolute URLs in structured data, sitemap.xml, robots.txt and llms.txt are omitted.
 DOMAIN = ""
+PDF_BASE = "https://github.com/Mano181/StoreSite/releases/download/catalogues-v1"
 PHONE_TEL = "+917200523519"
 PHONE_DISP = "+91 72005 23519"
 EMAIL = "boseelectrical.karaikal@gmail.com"
@@ -277,10 +278,10 @@ CATS = {
         ],
         "brands": [],
         "catalogs": [
-            ("Orient Fans Catalogue 2025",         "pdfs/orient-fans-catalogue-2025.pdf"),
-            ("Atomberg Fans Catalogue — Summer 2026", "pdfs/atomberg-fans-catalogue-2026.pdf"),
-            ("Crompton BLDC Ceiling Fans",          "pdfs/crompton-bldc-fans.pdf"),
-            ("Crompton Fans Catalogue",             "pdfs/crompton-fans-catalogue.pdf"),
+            ("Orient Fans Catalogue 2025",            f"{PDF_BASE}/orient-fans-catalogue-2025.pdf"),
+            ("Atomberg Fans Catalogue — Summer 2026", f"{PDF_BASE}/atomberg-fans-catalogue-2026.pdf"),
+            ("Crompton BLDC Ceiling Fans",            f"{PDF_BASE}/crompton-bldc-fans.pdf"),
+            ("Crompton Fans Catalogue",               f"{PDF_BASE}/crompton-fans-catalogue.pdf"),
         ],
     },
     "lighting": {
@@ -297,6 +298,10 @@ CATS = {
             ("Industrial",  "Industrial Lighting",  "images/stock/lighting.jpg"),
         ],
         "brands": ["Crompton", "Anchor"],
+        "catalogs": [
+            ("Philips Domestic Lighting",      f"{PDF_BASE}/Domestic-Lighting-Philips.pdf"),
+            ("Philips Professional Lighting",  f"{PDF_BASE}/Professional-Lightings-Philips.pdf"),
+        ],
     },
     "switches": {
         "file": "switches.html", "label": "Switches & Accessories", "icon": "switch", "img": "images/stock/switches.jpg",
@@ -314,7 +319,7 @@ CATS = {
         ],
         "brands": [],
         "catalogs": [
-            ("Anchor Metal Boxes Price List", "pdfs/anchor-metal-boxes-pricelist.pdf"),
+            ("Anchor Metal Boxes Price List", f"{PDF_BASE}/anchor-metal-boxes-pricelist.pdf"),
         ],
     },
     "wires": {
@@ -337,10 +342,10 @@ CATS = {
         ],
         "brands": [],
         "catalogs": [
-            ("Finolex Cables Price List — Oct 2026",        "pdfs/finolex-cables-pricelist-2026.pdf"),
-            ("RR Kabel Price List (Project &amp; Industry)", "pdfs/rr-kabel-pricelist.pdf"),
-            ("Orbit Cables Price List",                     "pdfs/orbit-cables-pricelist.pdf"),
-            ("Norwood Wire &amp; Cable Price List — Aug 2026", "pdfs/norwood-wire-cable-pricelist-2026.pdf"),
+            ("Finolex Cables Price List — Oct 2026",           f"{PDF_BASE}/finolex-cables-pricelist-2026.pdf"),
+            ("RR Kabel Price List (Project &amp; Industry)",   f"{PDF_BASE}/rr-kabel-pricelist.pdf"),
+            ("Orbit Cables Price List",                        f"{PDF_BASE}/orbit-cables-pricelist.pdf"),
+            ("Norwood Wire &amp; Cable Price List — Aug 2026", f"{PDF_BASE}/norwood-wire-cable-pricelist-2026.pdf"),
         ],
     },
     "switchgear": {
@@ -375,8 +380,8 @@ CATS = {
         ],
         "brands": [],
         "catalogs": [
-            ("Venus Splash Pro — Catalogue",    "pdfs/venus-splash-pro-catalogue.pdf"),
-            ("Venus Splash Copper — Catalogue", "pdfs/venus-splash-copper-catalogue.pdf"),
+            ("Venus Splash Pro — Catalogue",    f"{PDF_BASE}/venus-splash-pro-catalogue.pdf"),
+            ("Venus Splash Copper — Catalogue", f"{PDF_BASE}/venus-splash-copper-catalogue.pdf"),
         ],
     },
     "industrial_spare": {
@@ -411,10 +416,7 @@ def product_card(cat, group, label, brand, img, combined=False):
     title = f"{label} - {brand}"
     attr = html.escape(html.unescape(title), quote=True)
     thumb = (pic(img, attr, "(max-width:560px) 100vw, (max-width:1024px) 50vw, 400px") if img else ic(CATS[cat]["icon"]))
-    # A brand catalogue PDF dropped into pdfs/<slug>.pdf turns the card into a link on the next build.
-    slug = re.sub(r"[^a-z0-9]+", "-", html.unescape(title).lower()).strip("-")
-    pdf = f"pdfs/{slug}.pdf"
-    link = (f' href="{pdf}" target="_blank" rel="noopener"') if (OUT / pdf).exists() else ""
+    link = ""
     tag = "a" if link else "article"
     body = f'<div class="p-body"><h3 class="p-brandname p-combined" aria-label="{attr}">{brand if cat == "heaters" else html.unescape(label) + " - " + brand}</h3></div>'
     return f'''      <{tag} class="product-card reveal" data-group="{group}"{link}>
