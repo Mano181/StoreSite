@@ -184,7 +184,7 @@ FOOTER = f'''
   <div class="footer-grid">
     <div class="footer-brand">
       <div class="wordmark"><div class="bolt">{ic("bolt")}</div>Esan Electric Company</div>
-      <p>Wholesale fans, wires &amp; cables, lighting, MCB switchgear and water heaters for retail shops, dealers, contractors and builders across Tamil Nadu.</p>
+      <p>Comprehensive electrical solutions for residential, commercial and industrial needs, backed by trusted brands.</p>
       <a href="tel:{PHONE_TEL}" class="footer-phone">{PHONE_DISP}</a>
     </div>
     <div>
@@ -195,7 +195,7 @@ FOOTER = f'''
         <li><a href="fans.html">Fans &amp; Ventilation</a></li>
         <li><a href="wires.html">Wires &amp; Cables</a></li>
         <li><a href="lighting.html">Lighting Solutions</a></li>
-        <li><a href="switchgear.html">Distribution Box &amp; MCB</a></li>
+        <li><a href="switchgear.html">Switchgear &amp; Protection Devices</a></li>
         <li><a href="heaters.html">Water Heaters</a></li>
         <li><a href="industrial-spare.html">Industrial Spare</a></li>
         <li><a href="switches.html">Switches &amp; Accessories</a></li>
@@ -212,7 +212,7 @@ FOOTER = f'''
   </div>
   <div class="footer-bottom">
     <p>© Esan Electric Company. All rights reserved.</p>
-    <p>Wholesale supply across Tamil Nadu</p>
+    <p>Wholesale electrical supply</p>
   </div>
 </footer>
 
@@ -265,7 +265,7 @@ CATS = {
         "title": "Wholesale Fans in Tamil Nadu — Ceiling, BLDC, Exhaust, Table | Esan Electric",
         "desc": "Wholesale ceiling fans, BLDC fans, exhaust fans, table and pedestal fans for retail shops, dealers and contractors across Tamil Nadu. Bulk rates on request.",
         "h1": "Wholesale Fans",
-        "lead": "Ceiling, BLDC, exhaust, table and pedestal fans for shops, dealers and project buyers across Tamil Nadu.",
+        "lead": "A complete range of ceiling, BLDC, exhaust, table and pedestal fans for dealers, contractors and project buyers.",
         # (tab group, card label, image, brands). Per-type brand lists; brand_cards() uses the 4th element when present.
         "types": [
             ("Standard",   "Fan (All types)", "images/Products/covers/anchor-fans-001.jpg",        ["Anchor"]),
@@ -290,7 +290,7 @@ CATS = {
         "title": "Wholesale LED Lights, Bulbs & Tubes in Tamil Nadu | Esan Electric",
         "desc": "Wholesale LED bulbs, tube lights, downlights and battens for retail shops, dealers and contractors across Tamil Nadu. Bulk rates on request.",
         "h1": "Wholesale LED Lighting",
-        "lead": "LED bulbs, tubes, downlights and battens for dealers, contractors and builders across Tamil Nadu.",
+        "lead": "A complete range of LED bulbs, tubes, downlights and battens for dealers, contractors and builders.",
         "types": [
             ("Standard",    "Standard Lighting",    "images/stock/led-bulb.jpg"),
             ("Decorative",  "Decorative Lighting",  "images/stock/lighting.jpg"),
@@ -305,7 +305,7 @@ CATS = {
         "title": "Wholesale Switches & Accessories in Tamil Nadu | Esan Electric",
         "desc": "Wholesale modular switches, switch plates and accessories for retail shops, electricians, contractors and builders across Tamil Nadu. Bulk rates on request.",
         "h1": "Switches &amp; Accessories",
-        "lead": "Modular switches and accessories for shops, electricians, contractors and builders across Tamil Nadu.",
+        "lead": "Modular switches and accessories from trusted brands for electricians, contractors and builders.",
         "types": [
             ("All", "Allzy",           "images/Products/covers/legrand-allzy-01.jpg",   ["Legrand"]),
             ("All", "Myrius",          "images/Products/covers/legrand-myrius-01.jpg",  ["Legrand"]),
@@ -324,7 +324,7 @@ CATS = {
         "title": "Bulk Electrical Wires & Cables Supplier in Tamil Nadu | Esan Electric",
         "desc": "Bulk copper house wires and electrical cables for retail shops, electricians, contractors and builders across Tamil Nadu. Per-roll and bulk rates on request.",
         "h1": "Wires &amp; Cables",
-        "lead": "Copper house wire and cables supplied by the roll for shops, electricians, contractors and builders across Tamil Nadu.",
+        "lead": "Copper house wire and cables, supplied by the roll or in bulk, for electricians, contractors and builders.",
         "types": [
             ("Wire", "House Wires (90, 180 &amp; 300 Mtrs)", "images/Products/covers/finolex-wire-02.jpg", ["Finolex"]),
             ("Wire", "House Wires (Project &amp; Industry)", "images/Products/covers/rr-kabel-wire-01.jpg", ["RR Kabel"]),
@@ -344,13 +344,13 @@ CATS = {
         ],
     },
     "switchgear": {
-        "file": "switchgear.html", "label": "Distribution Box & MCB", "icon": "switch", "img": "images/stock/switchgear.jpg",
+        "file": "switchgear.html", "label": "Switchgear & Protection Devices", "icon": "switch", "img": "images/stock/switchgear.jpg",
         "video": "uXgtDtYxHdk",
         "blurb": "Distribution boards, MCBs &amp; RCCBs",
         "title": "Wholesale Distribution Boards & MCB in Tamil Nadu | Esan Electric",
         "desc": "Wholesale distribution boards, MCBs, MCCBs, RCCBs and isolators for retail shops, electricians, contractors and builders across Tamil Nadu. Bulk rates on request.",
-        "h1": "Distribution Box &amp; MCB",
-        "lead": "Distribution boards, circuit breakers and earth-leakage protection for shops, electricians, contractors and builders across Tamil Nadu.",
+        "h1": "Switchgear &amp; Protection Devices",
+        "lead": "Distribution boards, circuit breakers and earth-leakage protection for electricians, contractors and builders.",
         "types": [
             ("All", "Distribution Board (AC box, Enclosures, &amp; DBs)", "images/Products/covers/legrand-db-01.jpg",    ["Legrand"]),
             ("All", "MCB, RCCB, Timers &amp; RCBO",                        "images/Products/covers/legrand-mcb-01.jpg",   ["Legrand"]),
@@ -367,7 +367,7 @@ CATS = {
         "title": "Wholesale Water Heaters in Tamil Nadu | Esan Electric",
         "desc": "Wholesale water heaters for retail shops, dealers, electricians, contractors and builders across Tamil Nadu. Bulk rates on request.",
         "h1": "Water Heaters",
-        "lead": "Water heaters for shops, dealers, electricians, contractors and builders across Tamil Nadu.",
+        "lead": "Water heaters from leading brands for dealers, electricians, contractors and builders.",
         "types": [
             ("All", "Water Heater", "images/Products/covers/venus-heater-web.jpg",   ["Venus"]),
             ("All", "Water Heater", "images/Products/covers/vguard-heater-web.jpg",  ["V-Guard"]),
@@ -386,7 +386,7 @@ CATS = {
         "title": "Wholesale Industrial Spare Parts in Tamil Nadu | Esan Electric",
         "desc": "Wholesale industrial spare parts and electrical components for contractors, builders and industrial buyers across Tamil Nadu. Bulk rates on request.",
         "h1": "Industrial Spare",
-        "lead": "Industrial spare parts and components for contractors, builders and industrial buyers across Tamil Nadu.",
+        "lead": "Industrial spare parts and components for contractors, builders and industrial buyers.",
         "types": [("Industrial Spare", "Industrial Spare Part", None)],
         "brands": ["L&T"],
     },
@@ -416,7 +416,7 @@ def product_card(cat, group, label, brand, img, combined=False):
     pdf = f"pdfs/{slug}.pdf"
     link = (f' href="{pdf}" target="_blank" rel="noopener"') if (OUT / pdf).exists() else ""
     tag = "a" if link else "article"
-    body = f'<div class="p-body"><h3 class="p-brandname p-combined" aria-label="{attr}">{html.unescape(label)} - {brand}</h3></div>'
+    body = f'<div class="p-body"><h3 class="p-brandname p-combined" aria-label="{attr}">{brand if cat == "heaters" else html.unescape(label) + " - " + brand}</h3></div>'
     return f'''      <{tag} class="product-card reveal" data-group="{group}"{link}>
         <div class="p-thumb">{thumb}</div>
         {body}
@@ -559,7 +559,7 @@ def index_page():
 """ for img, t, p in [
         ("sector-shop", "Retail shops &amp; dealers", "Restock fast-moving fans, wires and lights at wholesale rates, in lot sizes that suit a shop."),
         ("sector-electrician", "Electricians", "Wire, fans and fittings for the jobs you take on, quoted together in one list."),
-        ("sector-site", "Contractors", "Project quantities of wire, fans and lighting, delivered to your site within Tamil Nadu."),
+        ("sector-site", "Contractors", "Bulk project supplies of wire, fans and lighting, delivered to your site."),
         ("sector-home", "Homes &amp; apartments", "Ceiling fans, house wire and LED lighting for residential projects."),
     ])
     why = "".join(f"""        <li class="why-item reveal">
@@ -573,7 +573,7 @@ def index_page():
         ("check", "Branded stock", "We resell manufacturers&#39; brands, so you can stock the names your customers ask for."),
         ("tag", "Wholesale rates", "Rates are quoted on request and depend on quantity, with bulk benefits on larger orders."),
         ("clock", "Quotes within an hour", "Send your list and we reply with rates within an hour."),
-        ("truck", "Supply across Tamil Nadu", "We supply to shops, sites and godowns within Tamil Nadu."),
+        ("truck", "Dependable delivery", "We deliver to shops, sites and godowns. Tell us your location when you enquire."),
         ("phone", "Talk to a person", "Call, WhatsApp or use the form — we reply promptly."),
     ], 1))
     steps = "".join(f"""        <li class="reveal">
@@ -584,7 +584,7 @@ def index_page():
 """ for n, t, p in [
         (1, "Build your list", "Tell us what you need and how much, using the enquiry form, a call or WhatsApp."),
         (2, "Get wholesale rates", "We reply within an hour with rates and any bulk benefits."),
-        (3, "Receive in Tamil Nadu", "Confirm the order and we arrange supply to your shop or site."),
+        (3, "Receive your order", "Confirm the order and we arrange supply to your shop or site."),
     ])
     uline = (
         '<svg class="uline" viewBox="0 0 300 24" preserveAspectRatio="none" aria-hidden="true">'
@@ -596,9 +596,9 @@ def index_page():
 <section class="hero">
   <div class="hero-grid">
     <div class="hero-content">
-      <div class="hero-tag">Wholesale supply &middot; Tamil Nadu</div>
+      <div class="hero-tag">Wholesale electrical supply</div>
       <h1>Quality Electricals at the <span class="hl">Right Price.{uline}</span></h1>
-      <p class="hero-sub">Stock your shop or supply your next project. Esan Electric supplies fans, wires &amp; cables, LED lighting, MCB switchgear and water heaters to retail shops, dealers, contractors and builders across Tamil Nadu.</p>
+      <p class="hero-sub">Comprehensive electrical solutions for residential, commercial and industrial needs, backed by trusted brands and dependable supply.</p>
       <div class="hero-btns">
         <a href="products.html" class="btn-hero-primary">Browse Products {ic("arrow")}</a>
       </div>
@@ -678,7 +678,7 @@ FAQ = [
     ("What is the minimum order quantity?",
      "Minimum order quantities depend on the product. Ask us for the minimum order for the specific model or gauge you need."),
     ("Do you deliver across Tamil Nadu?",
-     "Yes. We supply to shops, sites and godowns within Tamil Nadu. Tell us your town or city when you enquire."),
+     "Yes. We deliver to shops, sites and godowns. Tell us your location when you enquire. Tell us your town or city when you enquire."),
     ("Do you list prices on the website?",
      "No. Rates change with quantity and market conditions, so we quote on request. Fill the enquiry form, call or message us on WhatsApp and we respond within an hour."),
     ("Which products do you sell?",
