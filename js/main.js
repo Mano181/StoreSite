@@ -236,3 +236,14 @@ if (brandsTrack && brandsSet && !reduceMotion) {
   const setW = brandsSet.offsetWidth;
   brandsTrack.style.setProperty('--set-w', `${setW}px`);
 }
+
+// ── Hero slideshow ──
+const slides = document.querySelectorAll('.hero-slide');
+if (slides.length > 1 && !reduceMotion) {
+  let cur = 0;
+  setInterval(() => {
+    slides[cur].classList.remove('is-active');
+    cur = (cur + 1) % slides.length;
+    slides[cur].classList.add('is-active');
+  }, 5000);
+}

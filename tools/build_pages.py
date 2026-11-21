@@ -263,9 +263,37 @@ ORG = {
 
 # ── Product card → PDF mapping: "card label - brand" slug → release PDF URL ──
 CARD_PDFS = {
-    "standard-lighting-philips":    pdf_view(f"{PDF_BASE}/Domestic-Lighting-Philips.pdf"),
-    "decorative-lighting-philips":  pdf_view(f"{PDF_BASE}/Domestic-Lighting-Philips.pdf"),
-    "industrial-lighting-philips":  pdf_view(f"{PDF_BASE}/Professional-Lightings-Philips.pdf"),
+    # fans
+    "fan-all-types-anchor":                                     f"{PDF_BASE}/fan-all-types-anchor.pdf",
+    "fan-all-types-crompton":                                   f"{PDF_BASE}/fan-all-types-crompton.pdf",
+    "fans-smart-bldc-atomberg":                                 f"{PDF_BASE}/fans-smart-bldc-atomberg.pdf",
+    "fans-ceiling-exhaust-wall-mount-cg":                       f"{PDF_BASE}/Fans-Ceiling-Exhaust-Wall-Mount-CG.pdf",
+    "fans-industrial-wall-pedestal-ceiling-exhaust-fans-almonard": f"{PDF_BASE}/fans-industrial-wall-pedestal-ceiling-exhaust-fans-almonard.pdf",
+    "decorative-fan-orient":                                    f"{PDF_BASE}/decorative-fan-orient.pdf",
+    # lighting
+    "standard-lighting-philips":                                f"{PDF_BASE}/Domestic-Lighting-Philips.pdf",
+    "decorative-lighting-philips":                              f"{PDF_BASE}/Domestic-Lighting-Philips.pdf",
+    "industrial-lighting-philips":                              f"{PDF_BASE}/Professional-Lightings-Philips.pdf",
+    # switches
+    "allzy-legrand":                                            f"{PDF_BASE}/allzy-legrand.pdf",
+    "myrius-legrand":                                           f"{PDF_BASE}/myrius-legrand.pdf",
+    "kosmo-kavaski":                                            f"{PDF_BASE}/kosmo-kavaski.pdf",
+    "anchor-switches-anchor":                                   f"{PDF_BASE}/anchor-switches-anchor.pdf",
+    # wires
+    "house-wires-90-180-300-mtrs-finolex":                      f"{PDF_BASE}/House-Wires-90-180-300-Mtrs-Finolex.pdf",
+    "house-wires-project-industry-rr-kabel":                    f"{PDF_BASE}/house-wires-project-industry-rr-kabel.pdf",
+    "house-wire-norwood":                                       f"{PDF_BASE}/house-wire-norwood.pdf",
+    "house-wires-90-180-mtrs-polycab":                          f"{PDF_BASE}/House-Wires-90-180-Mtrs-Polycab.pdf",
+    "cable-orbit":                                              f"{PDF_BASE}/cable-orbit.pdf",
+    "ht-cable-catalogue-polycab":                               f"{PDF_BASE}/HT-Cable-Catalogue-Polycab.pdf",
+    # switchgear
+    "distribution-board-ac-box-enclosures-dbs-legrand":         f"{PDF_BASE}/distribution-board-ac-box-enclosures-dbs-legrand.pdf",
+    "mcb-rccb-timers-rcbo-legrand":                             f"{PDF_BASE}/Mcb-Rccb-Timers-Rcbo-Legrand.pdf",
+    "mccb-legrand":                                             f"{PDF_BASE}/Mccb-Legrand.pdf",
+    "surge-protecting-device-spd-legrand":                      f"{PDF_BASE}/Surge-Protecting-Device-SPD-Legrand.pdf",
+    "phase-selector-rotary-db-legrand":                         f"{PDF_BASE}/phase-selector-rotary-db-legrand.pdf",
+    # heaters
+    "water-heater-venus":                                       f"{PDF_BASE}/water-heater-venus.pdf",
 }
 
 # ── Products: each category lists `types` x `brands`; a card is made for every pair. Groups feed the filter tabs. ──
@@ -304,11 +332,10 @@ CATS = {
         "h1": "Wholesale LED Lighting",
         "lead": "A complete range of LED bulbs, tubes, downlights and battens for dealers, contractors and builders.",
         "types": [
-            ("Standard",    "Standard Lighting",    "images/stock/led-bulb.jpg"),
-            ("Decorative",  "Decorative Lighting",  "images/stock/lighting.jpg"),
-            ("Industrial",  "Industrial Lighting",  "images/stock/lighting.jpg"),
+            ("All",  "Standard Lighting",   "images/Products/covers/philips-lighting-standard.jpg",  ["Philips"]),
+            ("All",  "Industrial Lighting", "images/Products/covers/philips-lighting-industrial.jpg", ["Philips"]),
         ],
-        "brands": ["Philips", "Crompton", "Anchor"],
+        "brands": [],
         "catalogs": [
             ("Philips Domestic Lighting",      pdf_view(f"{PDF_BASE}/Domestic-Lighting-Philips.pdf")),
             ("Philips Professional Lighting",  pdf_view(f"{PDF_BASE}/Professional-Lightings-Philips.pdf")),
@@ -345,10 +372,8 @@ CATS = {
             ("Wire", "House Wires (90, 180 &amp; 300 Mtrs)", "images/Products/covers/finolex-wire-02.jpg", ["Finolex"]),
             ("Wire", "House Wires (Project &amp; Industry)", "images/Products/covers/rr-kabel-wire-01.jpg", ["RR Kabel"]),
             ("Wire", "House Wire", "images/Products/covers/norwood-wire-01.jpg",   ["Norwood"]),
-            ("Wire", "House Wires (90 &amp; 180 Mtrs)",    "images/stock/wires.jpg",                       ["Polycab"]),
-            ("Wire", "House Wire", "images/stock/wires.jpg",                       ["Orient"]),
+            ("Wire", "House Wires (90 &amp; 180 Mtrs)",    "images/Products/covers/polycab-wire-box.jpg", ["Polycab"]),
             ("Cable", "Cable",     "images/Products/covers/orbit-cable-1.jpg",     ["Orbit"]),
-            ("Cable", "Cable",     "images/stock/cable.jpg",                       ["Paragon"]),
             ("Cable", "HT Cable Catalogue", "images/Products/covers/polycab-ht-cable-01.jpg", ["Polycab"]),
         ],
         "brands": [],
@@ -533,10 +558,14 @@ def products_page():
              "Browse Esan Electric's wholesale range: fans, wires and cables, LED lighting, MCB switchgear and water heaters for retail shops, dealers and contractors across Tamil Nadu.",
              "products.html") + nav("products")
     s += f'''
-<section class="products-section">
+<section class="categories products-section--top">
   <div class="container">
-    <div class="bento">
-{cat_cards(exclude=("industrial_spare",))}    </div>
+    <div class="section-head center">
+      <span class="docket-eyebrow">Browse by category</span>
+      <h2 class="wipe">Explore our products.</h2>
+    </div>
+    <div class="featured-grid">
+{video_grid()}    </div>
   </div>
 </section>
 </main>
@@ -561,9 +590,11 @@ def index_page():
     <div class="brands-set" aria-hidden="true">{items}</div>
   </div>
 </section>'''
-    shelf = f'''<figure class="hero-photo">
-        {pic("images/stock/hero.jpg", "A ceiling fan and brass pendant lamps", "(max-width:1024px) 100vw, 40vw", eager=True)}
-      </figure>'''
+    shelf = f'''<div class="hero-slideshow">
+      <div class="hero-slide is-active">{pic("images/hero-slide-1.jpg", "Legrand Lyncus LED Touch Dimmer", "(max-width:1024px) 100vw, 40vw", eager=True)}</div>
+      <div class="hero-slide">{pic("images/hero-slide-2.jpg", "Legrand Arteor Advance modular switches", "(max-width:1024px) 100vw, 40vw")}</div>
+      <div class="hero-slide">{pic("images/hero-slide-3.jpg", "Industrial plugs and sockets", "(max-width:1024px) 100vw, 40vw")}</div>
+    </div>'''
     # Sector cards: who we supply (clean photo card style)
     sectors = "".join(f"""      <article class="sector-card reveal">
         <div class="sector-photo">{pic(f"images/stock/{img}.jpg", "", "(max-width:600px) 100vw, (max-width:1024px) 50vw, 25vw")}</div>
@@ -612,7 +643,7 @@ def index_page():
   <div class="hero-grid">
     <div class="hero-content">
       <div class="hero-tag">Wholesale electrical supply</div>
-      <h1>Quality Electricals at the <span class="hl">Right Price.{uline}</span></h1>
+      <h1>Quality<br>Electricals<br><span class="hl">Right Price.{uline}</span></h1>
       <p class="hero-sub">Comprehensive electrical solutions for residential, commercial and industrial needs, backed by trusted brands and dependable supply.</p>
       <div class="hero-btns">
         <a href="products.html" class="btn-hero-primary">Browse Products {ic("arrow")}</a>
