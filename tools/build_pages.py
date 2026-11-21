@@ -730,6 +730,8 @@ FAQ = [
      "No. Rates change with quantity and market conditions, so we quote on request. Fill the enquiry form, call or message us on WhatsApp and we respond within an hour."),
     ("Which products do you sell?",
      "We sell five categories: fans (ceiling, BLDC, exhaust, table and pedestal), wires and cables, LED lighting (bulbs, tubes, downlights and battens), MCB and switchgear (MCBs, MCCBs, RCCBs, isolators and distribution boards), and water heaters."),
+    ("Why does the map show Bose Electrical instead of Esan Electric?",
+     "Bose Electrical is the retail-facing shop at the same premises. Esan Electric operates as the wholesale supply side of the business from that location. The address and directions are the same — walk into Bose Electrical and ask for wholesale enquiries."),
 ]
 
 
