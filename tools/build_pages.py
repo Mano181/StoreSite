@@ -113,13 +113,15 @@ def ic(name):
     return f'<svg class="ic" aria-hidden="true"><use href="#i-{name}"/></svg>'
 
 
-def head(title, desc, path, jsonld=None, noindex=False):
+def head(title, desc, path, jsonld=None, noindex=False, og_image=None):
     ld = ""
     for block in (jsonld or []):
         ld += f'\n  <script type="application/ld+json">\n{json.dumps(block, indent=2, ensure_ascii=False)}\n  </script>'
     robots = '\n  <meta name="robots" content="noindex"/>' if noindex else ""
-    canon = "" if noindex or not DOMAIN else f'\n  <link rel="canonical" href="{DOMAIN}/{path}"/>'
-    og_url = f'\n  <meta property="og:url" content="{DOMAIN}/{path}"/>' if DOMAIN else ""
+    canon_path = "" if path == "index.html" else path
+    canon = "" if noindex or not DOMAIN else f'\n  <link rel="canonical" href="{DOMAIN}/{canon_path}"/>'
+    og_url = f'\n  <meta property="og:url" content="{DOMAIN}/{canon_path}"/>' if DOMAIN else ""
+    _og_img = og_image or "images/hero-slide-1.jpg"
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -132,9 +134,10 @@ def head(title, desc, path, jsonld=None, noindex=False):
   <meta property="og:site_name" content="{NAME}"/>
   <meta property="og:title" content="{html.escape(title)}"/>
   <meta property="og:description" content="{html.escape(desc)}"/>
-  <meta property="og:image" content="{DOMAIN}/images/hero-slide-1.jpg"/>
-  <meta property="og:image:width" content="800"/>
-  <meta property="og:image:height" content="600"/>
+  <meta property="og:image" content="{DOMAIN}/{_og_img}"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="{html.escape(title)}"/>
+  <meta name="twitter:image" content="{DOMAIN}/{_og_img}"/>
 {og_url}
   <link rel="icon" href="favicon.svg" type="image/svg+xml"/>
   <link rel="stylesheet" href="fonts/fonts.css"/>
@@ -253,8 +256,11 @@ ORG = {
     "@type": "WholesaleStore",
     "name": NAME,
     "description": "Wholesale supplier of fans, wires & cables, lighting, MCB switchgear and water heaters for retail shops, dealers, contractors and builders in Puducherry and Tamil Nadu.",
+    "url": f"{DOMAIN}/" if DOMAIN else "",
+    "logo": f"{DOMAIN}/favicon.svg" if DOMAIN else "",
     "telephone": PHONE_TEL,
     "email": EMAIL,
+    "geo": {"@type": "GeoCoordinates", "latitude": 10.932017, "longitude": 79.830166},
     "areaServed": [{"@type": "AdministrativeArea", "name": "Puducherry, India"}, {"@type": "AdministrativeArea", "name": "Tamil Nadu, India"}],
     "address": {"@type": "PostalAddress", "streetAddress": "43/1, South Street, Jipmer Road, near Nilgiris supermarket", "addressLocality": "Karaikal", "addressRegion": "Puducherry", "postalCode": "609602", "addressCountry": "IN"},
     "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Product", "name": n}}
@@ -303,8 +309,8 @@ CATS = {
         "file": "fans.html", "label": "Fans & Ventilation", "icon": "fan", "img": "images/stock/fans.jpg",
         "video": "RE2KY74dWqc",
         "blurb": "Ceiling, BLDC, exhaust, table &amp; pedestal fans",
-        "title": "Wholesale Fans in Tamil Nadu — Ceiling, BLDC, Exhaust, Table | Esan Electric",
-        "desc": "Wholesale ceiling fans, BLDC fans, exhaust fans, table and pedestal fans for retail shops, dealers and contractors across Tamil Nadu. Bulk rates on request.",
+        "title": "Wholesale Fans in Karaikal & Tamil Nadu — Ceiling, BLDC, Exhaust | Esan Electric",
+        "desc": "Wholesale ceiling fans, BLDC fans, exhaust fans, table and pedestal fans from our Karaikal store for retail shops, dealers and contractors across Puducherry and Tamil Nadu. Bulk rates on request.",
         "h1": "Wholesale Fans",
         "lead": "A complete range of ceiling, BLDC, exhaust, table and pedestal fans for dealers, contractors and project buyers.",
         # (tab group, card label, image, brands). Per-type brand lists; brand_cards() uses the 4th element when present.
@@ -328,8 +334,8 @@ CATS = {
         "file": "lighting.html", "label": "Lighting Solutions", "icon": "bulb", "img": "images/stock/lighting.jpg",
         "video": "StcpNahIIos",
         "blurb": "Bulbs, tubes, downlights &amp; battens",
-        "title": "Wholesale LED Lights, Bulbs & Tubes in Tamil Nadu | Esan Electric",
-        "desc": "Wholesale LED bulbs, tube lights, downlights and battens for retail shops, dealers and contractors across Tamil Nadu. Bulk rates on request.",
+        "title": "Wholesale LED Lights, Bulbs & Tubes in Karaikal & Tamil Nadu | Esan Electric",
+        "desc": "Wholesale LED bulbs, tube lights, downlights and battens from our Karaikal store for retail shops, dealers and contractors across Puducherry and Tamil Nadu. Bulk rates on request.",
         "h1": "Wholesale LED Lighting",
         "lead": "A complete range of LED bulbs, tubes, downlights and battens for dealers, contractors and builders.",
         "types": [
@@ -346,8 +352,8 @@ CATS = {
         "file": "switches.html", "label": "Switches & Accessories", "icon": "switch", "img": "images/stock/switches.jpg",
         "video": "dmk7sjuuM6E",
         "blurb": "Modular switches &amp; accessories",
-        "title": "Wholesale Switches & Accessories in Tamil Nadu | Esan Electric",
-        "desc": "Wholesale modular switches, switch plates and accessories for retail shops, electricians, contractors and builders across Tamil Nadu. Bulk rates on request.",
+        "title": "Wholesale Switches & Accessories in Karaikal & Tamil Nadu | Esan Electric",
+        "desc": "Wholesale modular switches, switch plates and accessories from our Karaikal store for retail shops, electricians, contractors and builders across Puducherry and Tamil Nadu. Bulk rates on request.",
         "h1": "Switches &amp; Accessories",
         "lead": "Modular switches and accessories from trusted brands for electricians, contractors and builders.",
         "types": [
@@ -365,8 +371,8 @@ CATS = {
         "file": "wires.html", "label": "Wires & Cables", "icon": "plug", "img": "images/stock/wires.jpg",
         "video": "dKHI52dC7j0",
         "blurb": "Copper wire and cables by the roll",
-        "title": "Bulk Electrical Wires & Cables Supplier in Tamil Nadu | Esan Electric",
-        "desc": "Bulk copper house wires and electrical cables for retail shops, electricians, contractors and builders across Tamil Nadu. Per-roll and bulk rates on request.",
+        "title": "Bulk Electrical Wires & Cables Supplier in Karaikal & Tamil Nadu | Esan Electric",
+        "desc": "Bulk copper house wires and electrical cables from our Karaikal store for retail shops, electricians, contractors and builders across Puducherry and Tamil Nadu. Per-roll and bulk rates on request.",
         "h1": "Wires &amp; Cables",
         "lead": "Copper house wire and cables, supplied by the roll or in bulk, for electricians, contractors and builders.",
         "types": [
@@ -389,8 +395,8 @@ CATS = {
         "file": "switchgear.html", "label": "Switchgear & Protection Devices", "icon": "switch", "img": "images/stock/switchgear.jpg",
         "video": "uXgtDtYxHdk",
         "blurb": "Distribution boards, MCBs &amp; RCCBs",
-        "title": "Wholesale Distribution Boards & MCB in Tamil Nadu | Esan Electric",
-        "desc": "Wholesale distribution boards, MCBs, MCCBs, RCCBs and isolators for retail shops, electricians, contractors and builders across Tamil Nadu. Bulk rates on request.",
+        "title": "Wholesale Distribution Boards & MCB in Karaikal & Tamil Nadu | Esan Electric",
+        "desc": "Wholesale distribution boards, MCBs, MCCBs, RCCBs and isolators from our Karaikal store for retail shops, electricians, contractors and builders across Puducherry and Tamil Nadu. Bulk rates on request.",
         "h1": "Switchgear &amp; Protection Devices",
         "lead": "Distribution boards, circuit breakers and earth-leakage protection for electricians, contractors and builders.",
         "types": [
@@ -406,8 +412,8 @@ CATS = {
         "file": "heaters.html", "label": "Water Heaters", "icon": "heater", "img": "images/stock/heaters.jpg",
         "video": "VzTQTrrfJXc",
         "blurb": "Storage and instant water heaters",
-        "title": "Wholesale Water Heaters in Tamil Nadu | Esan Electric",
-        "desc": "Wholesale water heaters for retail shops, dealers, electricians, contractors and builders across Tamil Nadu. Bulk rates on request.",
+        "title": "Wholesale Water Heaters in Karaikal & Tamil Nadu | Esan Electric",
+        "desc": "Wholesale water heaters from our Karaikal store for retail shops, dealers, electricians, contractors and builders across Puducherry and Tamil Nadu. Bulk rates on request.",
         "h1": "Water Heaters",
         "lead": "Water heaters from leading brands for dealers, electricians, contractors and builders.",
         "types": [
@@ -459,7 +465,8 @@ def category_page(key):
     label = c["h1"].replace("&amp;", "&")
     products = []
     for i, (_g, card_label, br, img, _combined) in enumerate(brand_cards(key)):
-        prod = {"@type": "Product", "name": html.unescape(f"{card_label} - {br}"), "category": c["label"]}
+        prod = {"@type": "Product", "name": html.unescape(f"{card_label} - {br}"), "category": c["label"],
+                "brand": {"@type": "Brand", "name": br}}
         if img and DOMAIN:
             prod["image"] = f"{DOMAIN}/{img}"
         products.append({"@type": "ListItem", "position": i + 1, "item": prod})
@@ -471,7 +478,7 @@ def category_page(key):
             {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{DOMAIN}/"},
             {"@type": "ListItem", "position": 2, "name": "Products", "item": f"{DOMAIN}/products.html"},
             {"@type": "ListItem", "position": 3, "name": c["label"], "item": f"{DOMAIN}/{c['file']}"}]})
-    s = head(c["title"], c["desc"], c["file"], ld) + nav("products")
+    s = head(c["title"], c["desc"], c["file"], ld, og_image=c["img"]) + nav("products")
     crumb = f'<nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> <span>/</span> <a href="products.html">Products</a> <span>/</span> {c["label"].replace("&", "&amp;")}</nav>'
     s += page_hero("Product Category", c["h1"], c["lead"], crumb)
     groups = list(dict.fromkeys(t[0] for t in c["types"]))
@@ -484,8 +491,13 @@ def category_page(key):
   <div class="container">
 {tabs}'''
     s += '    <div class="products-grid">\n'
+    cat_label = c["label"].replace("&", "&amp;")
     for g in groups:
         cards = [b for b in brand_cards(key) if b[0] == g]
+        if len(groups) > 1:
+            s += f'      <h2 class="group-heading">{g} {cat_label}</h2>\n'
+        else:
+            s += f'      <h2 class="group-heading">{cat_label} from Top Brands</h2>\n'
         s += "\n".join(product_card(key, *b) for b in cards)
     s += '    </div>\n'
     wa_text = quote(f"Hi Esan Electric, I would like wholesale rates for {c['label']}.")
@@ -542,8 +554,8 @@ def video_grid():
 
 
 def products_page():
-    s = head("Wholesale Fans, Wires & LED Lighting — Product Range | Esan Electric",
-             "Browse Esan Electric's wholesale range: fans, wires and cables, LED lighting, MCB switchgear and water heaters for retail shops, dealers and contractors across Tamil Nadu.",
+    s = head("Wholesale Fans, Wires & LED Lighting — Product Range | Esan Electric, Karaikal",
+             "Browse Esan Electric's wholesale range in Karaikal: fans, wires and cables, LED lighting, MCB switchgear and water heaters for retail shops, dealers and contractors across Puducherry and Tamil Nadu.",
              "products.html") + nav("products")
     s += f'''
 <main id="main">
@@ -563,8 +575,8 @@ def products_page():
 
 
 def index_page():
-    s = head("Esan Electric — Wholesale Fans, Wires & LED Lighting in Tamil Nadu",
-             "Esan Electric Company supplies fans, wires & cables, LED lighting, MCB switchgear and water heaters wholesale to retail shops, dealers, contractors and builders across Tamil Nadu. Request our rate sheet.",
+    s = head("Esan Electric Karaikal — Wholesale Fans, Wires & LED Lighting in Puducherry & Tamil Nadu",
+             "Esan Electric Company, Karaikal, supplies fans, wires & cables, LED lighting, MCB switchgear and water heaters wholesale to retail shops, dealers, contractors and builders across Puducherry and Tamil Nadu. Request our rate sheet.",
              "index.html", [ORG]) + nav("home")
     strip = ""
     if BRANDS:
@@ -772,9 +784,26 @@ def wholesale_page():
 
 
 def contact_page():
-    s = head("Contact Esan Electric — Request Wholesale Rates in Tamil Nadu",
-             "Send a wholesale enquiry to Esan Electric for fans, wires, LED lighting, MCB switchgear and water heaters, or call and WhatsApp us. We reply within an hour.",
-             "contact.html") + nav("contact")
+    local_biz = {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": NAME,
+        "telephone": PHONE_TEL,
+        "email": EMAIL,
+        "url": f"{DOMAIN}/contact.html" if DOMAIN else "",
+        "address": ORG["address"],
+        "geo": {"@type": "GeoCoordinates", "latitude": 10.932017, "longitude": 79.830166},
+        "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+            "opens": "09:00", "closes": "19:00"},
+    }
+    faq_schema = {"@context": "https://schema.org", "@type": "FAQPage",
+        "mainEntity": [{"@type": "Question", "name": q,
+                        "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ]}
+    s = head("Contact Esan Electric Karaikal — Request Wholesale Rates in Puducherry & Tamil Nadu",
+             "Send a wholesale enquiry to Esan Electric in Karaikal for fans, wires, LED lighting, MCB switchgear and water heaters. Call, WhatsApp or use the form. We reply within an hour.",
+             "contact.html", [local_biz, faq_schema]) + nav("contact")
     s += page_hero("Contact Us", "Get in Touch",
                    "Tell us what you need and how much. <strong class=\"reply\">We reply within an hour.</strong>")
     s += f'''
@@ -865,6 +894,20 @@ def contact_page():
     </div>
   </div>
 </section>
+
+<section class="faq-section">
+  <div class="container">
+    <div class="section-head center">
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-list">
+''' + "".join(f'''      <details class="faq-item reveal">
+        <summary>{q}</summary>
+        <p>{a}</p>
+      </details>
+''' for q, a in FAQ) + '''    </div>
+  </div>
+</section>
 </main>
 '''
     return s + FOOTER
@@ -910,22 +953,36 @@ if DOMAIN:
     root_files["robots.txt"] = f"User-agent: *\nAllow: /\n\nSitemap: {DOMAIN}/sitemap.xml\n"
     root_files["llms.txt"] = (
         f"# {NAME}\n\n"
-        "> Wholesale supplier of fans, wires & cables, LED lighting, MCB switchgear and water heaters for retail shops, dealers, contractors and builders "
-        "in Tamil Nadu, India. Prices are quoted on request.\n\n"
+        "> Wholesale supplier of fans, wires & cables, LED lighting, MCB switchgear and water heaters "
+        "for retail shops, dealers, contractors and builders in Karaikal, Puducherry and Tamil Nadu, India. "
+        "Prices are quoted on request.\n\n"
+        "## Location\n"
+        "- Address: 43/1, South Street, Jipmer Road, near Nilgiris Supermarket, Karaikal, Puducherry 609602, India\n"
+        f"- Phone: {PHONE_DISP}\n"
+        f"- Email: {EMAIL}\n"
+        f"- WhatsApp: {WA}\n\n"
+        "## Brands we stock\n"
+        "Crompton, Anchor, Atomberg, Orient, CG, Almonard, Philips, Legrand, Kavaski, "
+        "Finolex, RR Kabel, Polycab, Norwood, Orbit, Venus, V-Guard, L&T\n\n"
         "## What we sell\n"
-        "- Fans: ceiling (standard, BLDC, designer, high-speed), exhaust, table and pedestal fans\n"
-        "- Wires & cables: copper house wire by the roll and in bulk\n"
-        "- Lighting: LED bulbs, tube lights, downlights and battens\n"
-        "- MCB & switchgear: MCBs, MCCBs, RCCBs, isolators and distribution boards\n"
-        "- Water heaters\n\n"
+        "- Fans: ceiling (standard, BLDC, designer, high-speed), exhaust, table and pedestal fans — Crompton, Anchor, Atomberg, Orient, CG, Almonard\n"
+        "- Wires & cables: copper house wire by the roll and in bulk — Finolex, RR Kabel, Polycab, Norwood, Orbit\n"
+        "- Lighting: LED bulbs, tube lights, downlights and battens — Philips\n"
+        "- Switches & accessories: modular switches — Legrand, Kavaski, Anchor\n"
+        "- MCB & switchgear: MCBs, MCCBs, RCCBs, isolators and distribution boards — Legrand\n"
+        "- Water heaters: storage and instant — Venus, V-Guard, Crompton\n\n"
         "## Who we supply\n"
         "- Retail shops and dealers restocking in wholesale lots\n"
-        "- Contractors and builders needing project quantities\n"
-        "- Service area: Tamil Nadu only\n\n"
+        "- Electricians and contractors needing project quantities\n"
+        "- Builders and developers\n"
+        "- Service area: Karaikal, Puducherry and Tamil Nadu\n\n"
         "## How to buy\n"
-        f"Request rates via the enquiry form, phone {PHONE_DISP}, WhatsApp {WA}, or email {EMAIL}. "
-        "We reply within an hour.\n\n"
-        "## Pages\n" + "".join(f"- [{p}]({DOMAIN}/{p})\n" for p in pages))
+        f"Request rates via the enquiry form on the contact page, phone {PHONE_DISP}, WhatsApp {WA}, or email {EMAIL}. "
+        "We reply within an hour. Minimum order quantities vary by product.\n\n"
+        "## Frequently asked questions\n"
+        + "".join(f"### {q}\n{a}\n\n" for q, a in FAQ)
+        + "## Pages\n"
+        + "".join(f"- [{p}]({DOMAIN}/{'index.html' if p == 'index.html' else p})\n".replace(f"{DOMAIN}/index.html", f"{DOMAIN}/") for p in pages))
 for name in ("sitemap.xml", "robots.txt", "llms.txt"):
     f = OUT / name
     if name in root_files:

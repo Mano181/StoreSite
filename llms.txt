@@ -1,24 +1,54 @@
 # Esan Electric Company
 
-> Wholesale supplier of fans, wires & cables, LED lighting, MCB switchgear and water heaters for retail shops, dealers, contractors and builders in Tamil Nadu, India. Prices are quoted on request.
+> Wholesale supplier of fans, wires & cables, LED lighting, MCB switchgear and water heaters for retail shops, dealers, contractors and builders in Karaikal, Puducherry and Tamil Nadu, India. Prices are quoted on request.
+
+## Location
+- Address: 43/1, South Street, Jipmer Road, near Nilgiris Supermarket, Karaikal, Puducherry 609602, India
+- Phone: +91 72005 23519
+- Email: boseelectrical.karaikal@gmail.com
+- WhatsApp: https://wa.me/917200523519
+
+## Brands we stock
+Crompton, Anchor, Atomberg, Orient, CG, Almonard, Philips, Legrand, Kavaski, Finolex, RR Kabel, Polycab, Norwood, Orbit, Venus, V-Guard, L&T
 
 ## What we sell
-- Fans: ceiling (standard, BLDC, designer, high-speed), exhaust, table and pedestal fans
-- Wires & cables: copper house wire by the roll and in bulk
-- Lighting: LED bulbs, tube lights, downlights and battens
-- MCB & switchgear: MCBs, MCCBs, RCCBs, isolators and distribution boards
-- Water heaters
+- Fans: ceiling (standard, BLDC, designer, high-speed), exhaust, table and pedestal fans — Crompton, Anchor, Atomberg, Orient, CG, Almonard
+- Wires & cables: copper house wire by the roll and in bulk — Finolex, RR Kabel, Polycab, Norwood, Orbit
+- Lighting: LED bulbs, tube lights, downlights and battens — Philips
+- Switches & accessories: modular switches — Legrand, Kavaski, Anchor
+- MCB & switchgear: MCBs, MCCBs, RCCBs, isolators and distribution boards — Legrand
+- Water heaters: storage and instant — Venus, V-Guard, Crompton
 
 ## Who we supply
 - Retail shops and dealers restocking in wholesale lots
-- Contractors and builders needing project quantities
-- Service area: Tamil Nadu only
+- Electricians and contractors needing project quantities
+- Builders and developers
+- Service area: Karaikal, Puducherry and Tamil Nadu
 
 ## How to buy
-Request rates via the enquiry form, phone +91 72005 23519, WhatsApp https://wa.me/917200523519, or email boseelectrical.karaikal@gmail.com. We reply within an hour.
+Request rates via the enquiry form on the contact page, phone +91 72005 23519, WhatsApp https://wa.me/917200523519, or email boseelectrical.karaikal@gmail.com. We reply within an hour. Minimum order quantities vary by product.
+
+## Frequently asked questions
+### Do you supply electrical wires in bulk?
+Yes. We supply copper house wire and cables by the roll and in bulk quantities for shops, electricians, contractors and builders in Tamil Nadu. Send us the gauge and quantity for a quote.
+
+### Can a retail shop buy fans and lights wholesale from you?
+Yes. Retail shops and dealers can buy ceiling fans, exhaust fans, table fans, pedestal fans and LED lighting at wholesale rates. Request our rate sheet for current dealer rates.
+
+### What is the minimum order quantity?
+Minimum order quantities depend on the product. Ask us for the minimum order for the specific model or gauge you need.
+
+### Do you deliver across Tamil Nadu?
+Yes. We deliver to shops, sites and godowns. Tell us your location when you enquire. Tell us your town or city when you enquire.
+
+### Do you list prices on the website?
+No. Rates change with quantity and market conditions, so we quote on request. Fill the enquiry form, call or message us on WhatsApp and we respond within an hour.
+
+### Which products do you sell?
+We sell five categories: fans (ceiling, BLDC, exhaust, table and pedestal), wires and cables, LED lighting (bulbs, tubes, downlights and battens), MCB and switchgear (MCBs, MCCBs, RCCBs, isolators and distribution boards), and water heaters.
 
 ## Pages
-- [index.html](https://mano181.github.io/StoreSite/index.html)
+- [index.html](https://mano181.github.io/StoreSite/)
 - [products.html](https://mano181.github.io/StoreSite/products.html)
 - [fans.html](https://mano181.github.io/StoreSite/fans.html)
 - [lighting.html](https://mano181.github.io/StoreSite/lighting.html)
