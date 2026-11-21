@@ -10,7 +10,7 @@ instead of editing every page. css/ and js/ are NOT generated.
 OUT = pathlib.Path(__file__).resolve().parent.parent
 # Set to the real site URL (no trailing slash), e.g. "https://www.example.com", once hosting is chosen.
 # While empty, canonical/og:url, absolute URLs in structured data, sitemap.xml, robots.txt and llms.txt are omitted.
-DOMAIN = ""
+DOMAIN = "https://mano181.github.io/StoreSite"
 PDF_BASE = "https://mano181.github.io/StoreSite/pdfs"
 
 def pdf_view(url):
@@ -132,6 +132,9 @@ def head(title, desc, path, jsonld=None, noindex=False):
   <meta property="og:site_name" content="{NAME}"/>
   <meta property="og:title" content="{html.escape(title)}"/>
   <meta property="og:description" content="{html.escape(desc)}"/>
+  <meta property="og:image" content="{DOMAIN}/images/hero-slide-1.jpg"/>
+  <meta property="og:image:width" content="800"/>
+  <meta property="og:image:height" content="600"/>
 {og_url}
   <link rel="icon" href="favicon.svg" type="image/svg+xml"/>
   <link rel="stylesheet" href="fonts/fonts.css"/>
@@ -146,7 +149,6 @@ def head(title, desc, path, jsonld=None, noindex=False):
 DROP_DESC = {"fans": "Ceiling, exhaust, table &amp; pedestal", "wires": "Copper wire and cables by the roll",
              "lighting": "Bulbs, tubes, downlights &amp; battens", "switchgear": "Distribution boards, MCBs &amp; RCCBs",
              "heaters": "Storage and instant water heaters",
-             "industrial_spare": "Industrial spare parts &amp; components",
              "switches": "Modular switches &amp; accessories"}
 
 
@@ -202,7 +204,6 @@ FOOTER = f'''
         <li><a href="lighting.html">Lighting Solutions</a></li>
         <li><a href="switchgear.html">Switchgear &amp; Protection Devices</a></li>
         <li><a href="heaters.html">Water Heaters</a></li>
-        <li><a href="industrial-spare.html">Industrial Spare</a></li>
         <li><a href="switches.html">Switches &amp; Accessories</a></li>
         <li><a href="contact.html">Contact Us</a></li>
       </ul>
@@ -251,10 +252,10 @@ ORG = {
     "@context": "https://schema.org",
     "@type": "WholesaleStore",
     "name": NAME,
-    "description": "Wholesale supplier of fans, wires & cables, lighting, MCB switchgear and water heaters for retail shops, dealers, contractors and builders in Tamil Nadu.",
+    "description": "Wholesale supplier of fans, wires & cables, lighting, MCB switchgear and water heaters for retail shops, dealers, contractors and builders in Puducherry and Tamil Nadu.",
     "telephone": PHONE_TEL,
     "email": EMAIL,
-    "areaServed": {"@type": "AdministrativeArea", "name": "Tamil Nadu, India"},
+    "areaServed": [{"@type": "AdministrativeArea", "name": "Puducherry, India"}, {"@type": "AdministrativeArea", "name": "Tamil Nadu, India"}],
     "address": {"@type": "PostalAddress", "streetAddress": "43/1, South Street, Jipmer Road, near Nilgiris supermarket", "addressLocality": "Karaikal", "addressRegion": "Puducherry", "postalCode": "609602", "addressCountry": "IN"},
     "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Product", "name": n}}
                    for n in ("Ceiling fans, exhaust fans, table and pedestal fans",
@@ -420,17 +421,6 @@ CATS = {
             ("Venus Splash Copper — Catalogue", pdf_view(f"{PDF_BASE}/venus-splash-copper-catalogue.pdf")),
         ],
     },
-    "industrial_spare": {
-        "file": "industrial-spare.html", "label": "Industrial Spare", "icon": "bolt", "img": "images/stock/industrial-spare.jpg",
-        "video": "wgoNMFOCTlQ",
-        "blurb": "Industrial spare parts &amp; components",
-        "title": "Wholesale Industrial Spare Parts in Tamil Nadu | Esan Electric",
-        "desc": "Wholesale industrial spare parts and electrical components for contractors, builders and industrial buyers across Tamil Nadu. Bulk rates on request.",
-        "h1": "Industrial Spare",
-        "lead": "Industrial spare parts and components for contractors, builders and industrial buyers.",
-        "types": [("Industrial Spare", "Industrial Spare Part", None)],
-        "brands": ["L&T"],
-    },
 }
 
 
@@ -468,8 +458,8 @@ def category_page(key):
     c = CATS[key]
     label = c["h1"].replace("&amp;", "&")
     products = []
-    for i, (_g, label, br, img, _combined) in enumerate(brand_cards(key)):
-        prod = {"@type": "Product", "name": html.unescape(f"{label} - {br}"), "category": c["label"]}
+    for i, (_g, card_label, br, img, _combined) in enumerate(brand_cards(key)):
+        prod = {"@type": "Product", "name": html.unescape(f"{card_label} - {br}"), "category": c["label"]}
         if img and DOMAIN:
             prod["image"] = f"{DOMAIN}/{img}"
         products.append({"@type": "ListItem", "position": i + 1, "item": prod})
@@ -530,8 +520,6 @@ def video_grid():
     Automatically includes <source> when videos/<key>.mp4 exists next to build_pages.py's output dir."""
     out = ""
     for k, c in CATS.items():
-        if k == "industrial_spare":
-            continue
         label = c["label"].replace("&", "&amp;")
         sizes = "(max-width:1024px) 50vw, 25vw"
         if (OUT / f"videos/{k}.mp4").exists():
@@ -558,11 +546,12 @@ def products_page():
              "Browse Esan Electric's wholesale range: fans, wires and cables, LED lighting, MCB switchgear and water heaters for retail shops, dealers and contractors across Tamil Nadu.",
              "products.html") + nav("products")
     s += f'''
+<main id="main">
 <section class="categories products-section--top">
   <div class="container">
     <div class="section-head center">
       <span class="docket-eyebrow">Browse by category</span>
-      <h2 class="wipe">Explore our products.</h2>
+      <h1 class="wipe">Explore our products.</h1>
     </div>
     <div class="featured-grid">
 {video_grid()}    </div>
@@ -597,7 +586,7 @@ def index_page():
     </div>'''
     # Sector cards: who we supply (clean photo card style)
     sectors = "".join(f"""      <article class="sector-card reveal">
-        <div class="sector-photo">{pic(f"images/stock/{img}.jpg", "", "(max-width:600px) 100vw, (max-width:1024px) 50vw, 25vw")}</div>
+        <div class="sector-photo">{pic(f"images/stock/{img}.jpg", t.replace("&amp;", "&"), "(max-width:600px) 100vw, (max-width:1024px) 50vw, 25vw")}</div>
         <div class="sector-body">
           <h3>{t}</h3>
         </div>
@@ -801,7 +790,7 @@ def contact_page():
           <div class="i-icon">{ic("pin")}</div>
           <div>
             <h4>Address</h4>
-            <p>No. 1, Electrical Market Street<br>Your City — 600001, Tamil Nadu</p>
+            <p>43/1, South Street, Jipmer Road<br>Near Nilgiris Supermarket<br>Karaikal, Puducherry — 609602</p>
           </div>
         </div>
         <div class="info-card">
@@ -819,14 +808,14 @@ def contact_page():
           </div>
         </div>
 
-        <div class="map-box">{ic("pin")} Add Google Maps embed here</div>
+        <div class="map-box"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.4146463515176!2d79.8301669!3d10.932017899999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a551171e9ba3d53%3A0xa589c287efbcf419!2sBose%20Electrical!5e0!3m2!1sen!2sin!4v1795262536475!5m2!1sen!2sin" width="100%" height="400" style="border:0;display:block;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Bose Electrical location"></iframe></div>
       </div>
 
       <div class="form-card reveal">
         <h3>Send an Enquiry</h3>
         <p>Fill in your details and we'll get back to you with rates and availability.</p>
         <form id="inquiryForm" action="https://api.web3forms.com/submit" method="POST" novalidate>
-          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY"/>
+          <input type="hidden" name="access_key" value="61e3df01-d077-4877-a8a6-72f1411da4ed"/>
           <input type="hidden" name="subject" value="New wholesale enquiry — Esan Electric"/>
           <input type="checkbox" name="botcheck" hidden tabindex="-1" autocomplete="off"/>
           <div class="form-row">
