@@ -397,6 +397,7 @@ html.js .wire-steps.visible li:nth-child(2)::after{transition-delay:0.8s;}
 .form-group input:user-invalid,.form-group textarea:user-invalid{border-color:var(--accent);}
 .form-group textarea{min-height:110px;resize:vertical;}
 .hint{display:block;margin-top:6px;font-size:0.82rem;color:var(--muted);}
+.hint a{color:var(--accent);font-weight:600;}
 .field-error{display:block;margin-top:6px;font-size:0.88rem;font-weight:600;color:var(--accent);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .btn-submit{

@@ -858,6 +858,10 @@ def contact_page():
               <input id="f-phone" type="tel" name="phone" placeholder="+91 XXXXX XXXXX" autocomplete="tel" inputmode="tel" pattern="[0-9+ \\-]{{10,15}}" required/>
             </div>
           </div>
+          <div class="form-group">
+            <label for="f-email">Email address</label>
+            <input id="f-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
+          </div>
           <div class="form-row">
             <div class="form-group">
               <label for="f-type">I am a</label>
@@ -878,7 +882,7 @@ def contact_page():
           <div class="form-group">
             <label for="f-message">Products &amp; quantities</label>
             <textarea id="f-message" name="message" placeholder="e.g. 1.5 sq mm wire, 50 rolls; 48&quot; ceiling fans, 100 pcs" required></textarea>
-            <span class="hint">Include the size, rating or quantity if you know it.</span>
+            <span class="hint">Feel free to call us directly on <a href="tel:{PHONE_TEL}">{PHONE_DISP}</a>.</span>
           </div>
           <button type="submit" class="btn-submit"><span class="spin" aria-hidden="true"></span><span class="bt">Send Enquiry</span></button>
           <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
