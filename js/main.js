@@ -195,6 +195,12 @@ if (!reduceMotion) {
     v.closest('.feat-media')?.querySelector('.feat-placeholder')?.remove();
   });
 
+  // Warm up: once the page has loaded, fetch the (small) clips in the background
+  // so they are ready before the cards scroll into view.
+  const warmUp = () => featVids.forEach(v => { v.preload = 'auto'; if (v.readyState === 0) v.load(); });
+  if (document.readyState === 'complete') warmUp();
+  else window.addEventListener('load', warmUp, { once: true });
+
   if (featVids.length) {
     const inView = new Set();
     featVids.forEach(v => {

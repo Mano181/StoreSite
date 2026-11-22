@@ -140,6 +140,9 @@ def head(title, desc, path, jsonld=None, noindex=False, og_image=None):
   <meta name="twitter:image" content="{DOMAIN}/{_og_img}"/>
 {og_url}
   <link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+  <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32"/>
+  <link rel="shortcut icon" href="favicon.ico"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
   <link rel="stylesheet" href="fonts/fonts.css"/>
   <link rel="stylesheet" href="css/style.css"/>{ld}
 </head>
@@ -166,7 +169,8 @@ def nav(active):
 <nav class="navbar" aria-label="Main">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo" aria-label="Esan Electric home">
-      <span class="nl-board"><span class="nl-in"><b>Esan Electric</b><i>Wholesale</i></span></span>
+      <img class="nl-mark" src="images/esan-monogram.svg" width="44" height="44" alt="">
+      <span class="nl-text"><b>ESAN</b><i>ELECTRICAL</i></span>
     </a>
     <ul class="nav-links" id="site-menu">
 {a("index.html", "Home", "home")}
@@ -180,7 +184,6 @@ def nav(active):
       <li class="drawer-actions"><a href="tel:{PHONE_TEL}" class="da-call">{ic("phone")} Call</a><a href="{WA}" target="_blank" rel="noopener" class="da-wa">{ic("chat")} WhatsApp</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="tel:{PHONE_TEL}" class="nav-phone">{ic("phone")} {PHONE_DISP}</a>
       <a href="contact.html" class="btn-teal">Get in Touch</a>
     </div>
     <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span><span></span><span></span></button>
@@ -193,7 +196,7 @@ FOOTER = f'''
 <footer class="footer dark">
   <div class="footer-grid">
     <div class="footer-brand">
-      <div class="wordmark"><div class="bolt">{ic("bolt")}</div>Esan Electric Company</div>
+      <div class="wordmark"><img class="nl-mark" src="images/esan-monogram.svg" width="44" height="44" alt=""><span class="nl-text"><b>ESAN</b><i>ELECTRICAL</i></span></div>
       <p>Comprehensive electrical solutions for residential, commercial and industrial needs, backed by trusted brands.</p>
       <a href="tel:{PHONE_TEL}" class="footer-phone">{PHONE_DISP}</a>
     </div>
@@ -237,7 +240,7 @@ FOOTER = f'''
 
 
 def page_hero(eyebrow, h1, p, crumb=""):
-    top = crumb or f'<div class="section-eyebrow">{eyebrow}</div>'
+    top = crumb or (f'<div class="section-eyebrow">{eyebrow}</div>' if eyebrow else '')
     return f'''
 <main id="main">
 <section class="page-hero">
@@ -311,7 +314,7 @@ CATS = {
         "blurb": "Ceiling, BLDC, exhaust, table &amp; pedestal fans",
         "title": "Wholesale Fans in Karaikal & Tamil Nadu — Ceiling, BLDC, Exhaust | Esan Electric",
         "desc": "Wholesale ceiling fans, BLDC fans, exhaust fans, table and pedestal fans from our Karaikal store for retail shops, dealers and contractors across Puducherry and Tamil Nadu. Bulk rates on request.",
-        "h1": "Wholesale Fans",
+        "h1": "Fans (Designer &amp; Standard)",
         "lead": "A complete range of ceiling, BLDC, exhaust, table and pedestal fans for dealers, contractors and project buyers.",
         # (tab group, card label, image, brands). Per-type brand lists; brand_cards() uses the 4th element when present.
         "types": [
@@ -336,7 +339,7 @@ CATS = {
         "blurb": "Bulbs, tubes, downlights &amp; battens",
         "title": "Wholesale LED Lights, Bulbs & Tubes in Karaikal & Tamil Nadu | Esan Electric",
         "desc": "Wholesale LED bulbs, tube lights, downlights and battens from our Karaikal store for retail shops, dealers and contractors across Puducherry and Tamil Nadu. Bulk rates on request.",
-        "h1": "Wholesale LED Lighting",
+        "h1": "Lighting (Designer &amp; Standard)",
         "lead": "A complete range of LED bulbs, tubes, downlights and battens for dealers, contractors and builders.",
         "types": [
             ("All",  "Standard Lighting",   "images/Products/covers/philips-lighting-standard.jpg",  ["Philips"]),
@@ -397,7 +400,7 @@ CATS = {
         "blurb": "Distribution boards, MCBs &amp; RCCBs",
         "title": "Wholesale Distribution Boards & MCB in Karaikal & Tamil Nadu | Esan Electric",
         "desc": "Wholesale distribution boards, MCBs, MCCBs, RCCBs and isolators from our Karaikal store for retail shops, electricians, contractors and builders across Puducherry and Tamil Nadu. Bulk rates on request.",
-        "h1": "Switchgear &amp; Protection Devices",
+        "h1": "Switchgear &amp; Protection",
         "lead": "Distribution boards, circuit breakers and earth-leakage protection for electricians, contractors and builders.",
         "types": [
             ("All", "Distribution Board (AC box, Enclosures, &amp; DBs)", "images/Products/covers/legrand-db-01.jpg",    ["Legrand"]),
@@ -428,6 +431,8 @@ CATS = {
         ],
     },
 }
+# Display order on the site (nav menus, home cards, products page, sitemap)
+CATS = {k: CATS[k] for k in ("switches", "wires", "switchgear", "lighting", "fans", "heaters")}
 
 
 def brand_cards(cat):
@@ -479,8 +484,7 @@ def category_page(key):
             {"@type": "ListItem", "position": 2, "name": "Products", "item": f"{DOMAIN}/products.html"},
             {"@type": "ListItem", "position": 3, "name": c["label"], "item": f"{DOMAIN}/{c['file']}"}]})
     s = head(c["title"], c["desc"], c["file"], ld, og_image=c["img"]) + nav("products")
-    crumb = f'<nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> <span>/</span> <a href="products.html">Products</a> <span>/</span> {c["label"].replace("&", "&amp;")}</nav>'
-    s += page_hero("Product Category", c["h1"], c["lead"], crumb)
+    s += page_hero("", c["h1"], c["lead"])
     groups = list(dict.fromkeys(t[0] for t in c["types"]))
     tabs = ""
     if len(groups) > 1:
@@ -491,13 +495,8 @@ def category_page(key):
   <div class="container">
 {tabs}'''
     s += '    <div class="products-grid">\n'
-    cat_label = c["label"].replace("&", "&amp;")
     for g in groups:
         cards = [b for b in brand_cards(key) if b[0] == g]
-        if len(groups) > 1:
-            s += f'      <h2 class="group-heading">{g} {cat_label}</h2>\n'
-        else:
-            s += f'      <h2 class="group-heading">{cat_label} from Top Brands</h2>\n'
         s += "\n".join(product_card(key, *b) for b in cards)
     s += '    </div>\n'
     wa_text = quote(f"Hi Esan Electric, I would like wholesale rates for {c['label']}.")
@@ -535,7 +534,7 @@ def video_grid():
         label = c["label"].replace("&", "&amp;")
         sizes = "(max-width:1024px) 50vw, 25vw"
         if (OUT / f"videos/{k}.mp4").exists():
-            poster = c["img"].rsplit(".", 1)[0] + "-640.webp"
+            poster = f"images/stock/{k}-video-poster.webp"
             media = f'''<video poster="{poster}" muted loop playsinline preload="none" aria-hidden="true">
             <source src="videos/{k}.mp4" type="video/mp4">
           </video>'''
@@ -939,9 +938,8 @@ for k, c in CATS.items():
 for name, content in files.items():
     (OUT / name).write_text(content, encoding="utf-8", newline="\n")
 
-(OUT / "favicon.svg").write_text(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#ca0006"/>'
-    '<path d="M18 5 8 18h7l-1 9 10-13h-7z" fill="#ffffff"/></svg>\n', encoding="utf-8", newline="\n")
+# favicon = the E monogram (images/esan-monogram.svg is hand-authored)
+(OUT / "favicon.svg").write_text((OUT / "images/esan-monogram.svg").read_text(encoding="utf-8"), encoding="utf-8", newline="\n")
 
 # ── root files ──
 pages = ["index.html", "products.html"] + [c["file"] for c in CATS.values()] + ["contact.html"]

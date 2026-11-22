@@ -53,10 +53,10 @@ Bose Electrical is the retail-facing shop at the same premises. Esan Electric op
 ## Pages
 - [index.html](https://mano181.github.io/StoreSite/)
 - [products.html](https://mano181.github.io/StoreSite/products.html)
-- [fans.html](https://mano181.github.io/StoreSite/fans.html)
-- [lighting.html](https://mano181.github.io/StoreSite/lighting.html)
 - [switches.html](https://mano181.github.io/StoreSite/switches.html)
 - [wires.html](https://mano181.github.io/StoreSite/wires.html)
 - [switchgear.html](https://mano181.github.io/StoreSite/switchgear.html)
+- [lighting.html](https://mano181.github.io/StoreSite/lighting.html)
+- [fans.html](https://mano181.github.io/StoreSite/fans.html)
 - [heaters.html](https://mano181.github.io/StoreSite/heaters.html)
 - [contact.html](https://mano181.github.io/StoreSite/contact.html)
