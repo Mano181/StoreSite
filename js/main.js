@@ -115,12 +115,13 @@ function waLink(data) {
   const lines = ['Hi Esan Electric, I would like wholesale rates.',
     data.get('message') && `Requirement: ${data.get('message')}`,
     data.get('city') && `Town/City: ${data.get('city')}`,
-    data.get('name') && `Name: ${data.get('name')}`].filter(Boolean);
+    data.get('name') && `Name: ${data.get('name')}`,
+    data.get('email') && `Email: ${data.get('email')}`].filter(Boolean);
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`;
 }
 
 // Inline validation: show a message only after the user leaves a field
-const MESSAGES = { name: 'Please enter your name.', phone: 'Please enter a phone number we can call.', message: 'Tell us which products and how many.' };
+const MESSAGES = { name: 'Please enter your name.', phone: 'Please enter a phone number we can call.', message: 'Tell us which products and how many.', email: 'Please enter a valid email address.' };
 function checkField(el) {
   el.parentElement.querySelector('.field-error')?.remove();
   el.removeAttribute('aria-invalid');
@@ -130,14 +131,14 @@ function checkField(el) {
   el.setAttribute('aria-invalid', 'true');
   el.setAttribute('aria-describedby', msg.id);
 }
-form?.querySelectorAll('[required]').forEach(el => {
+form?.querySelectorAll('[required], [name="email"]').forEach(el => {
   el.addEventListener('blur', () => checkField(el));
   el.addEventListener('input', () => { if (el.hasAttribute('aria-invalid')) checkField(el); });
 });
 
 form?.addEventListener('submit', async e => {
   e.preventDefault();
-  const required = [...form.querySelectorAll('[required]')];
+  const required = [...form.querySelectorAll('[required], [name="email"]')];
   required.forEach(checkField);
   const bad = required.find(el => !el.checkValidity());
   if (bad) { bad.focus(); return; }
