@@ -18,6 +18,9 @@
 
   <meta property="og:url" content="https://mano181.github.io/StoreSite/"/>
   <link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+  <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32"/>
+  <link rel="shortcut icon" href="favicon.ico"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
   <link rel="stylesheet" href="fonts/fonts.css"/>
   <link rel="stylesheet" href="css/style.css"/>
   <script type="application/ld+json">
@@ -100,18 +103,19 @@
 <nav class="navbar" aria-label="Main">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo" aria-label="Esan Electric home">
-      <span class="nl-board"><span class="nl-in"><b>Esan Electric</b><i>Wholesale</i></span></span>
+      <img class="nl-mark" src="images/esan-monogram.svg" width="44" height="44" alt="">
+      <span class="nl-text"><b>ESAN</b><i>ELECTRICAL</i></span>
     </a>
     <ul class="nav-links" id="site-menu">
       <li><a href="index.html" class="active" aria-current="page">Home</a></li>
       <li class="has-drop">
         <a href="products.html">Products</a>
         <ul class="drop">
-          <li><a href="fans.html">Fans &amp; Ventilation</a></li>
-          <li><a href="lighting.html">Lighting Solutions</a></li>
           <li><a href="switches.html">Switches &amp; Accessories</a></li>
           <li><a href="wires.html">Wires &amp; Cables</a></li>
           <li><a href="switchgear.html">Switchgear &amp; Protection Devices</a></li>
+          <li><a href="lighting.html">Lighting Solutions</a></li>
+          <li><a href="fans.html">Fans &amp; Ventilation</a></li>
           <li><a href="heaters.html">Water Heaters</a></li>
         </ul>
       </li>
@@ -119,7 +123,6 @@
       <li class="drawer-actions"><a href="tel:+917200523519" class="da-call"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg> Call</a><a href="https://wa.me/917200523519" target="_blank" rel="noopener" class="da-wa"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg> WhatsApp</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="tel:+917200523519" class="nav-phone"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg> +91 72005 23519</a>
       <a href="contact.html" class="btn-teal">Get in Touch</a>
     </div>
     <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span><span></span><span></span></button>
@@ -157,29 +160,9 @@
       <a href="products.html" class="text-link">View all products <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
     </div>
     <div class="featured-grid">
-      <a href="fans.html" class="feat-card reveal">
-        <div class="feat-media">
-          <video poster="images/stock/fans-640.webp" muted loop playsinline preload="none" aria-hidden="true">
-            <source src="videos/fans.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="feat-info">
-          <h3>Fans &amp; Ventilation</h3>
-        </div>
-      </a>
-      <a href="lighting.html" class="feat-card reveal">
-        <div class="feat-media">
-          <video poster="images/stock/lighting-640.webp" muted loop playsinline preload="none" aria-hidden="true">
-            <source src="videos/lighting.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="feat-info">
-          <h3>Lighting Solutions</h3>
-        </div>
-      </a>
       <a href="switches.html" class="feat-card reveal">
         <div class="feat-media">
-          <video poster="images/stock/switches-640.webp" muted loop playsinline preload="none" aria-hidden="true">
+          <video poster="images/stock/switches-video-poster.webp" muted loop playsinline preload="none" aria-hidden="true">
             <source src="videos/switches.mp4" type="video/mp4">
           </video>
         </div>
@@ -189,7 +172,7 @@
       </a>
       <a href="wires.html" class="feat-card reveal">
         <div class="feat-media">
-          <video poster="images/stock/wires-640.webp" muted loop playsinline preload="none" aria-hidden="true">
+          <video poster="images/stock/wires-video-poster.webp" muted loop playsinline preload="none" aria-hidden="true">
             <source src="videos/wires.mp4" type="video/mp4">
           </video>
         </div>
@@ -199,7 +182,7 @@
       </a>
       <a href="switchgear.html" class="feat-card reveal">
         <div class="feat-media">
-          <video poster="images/stock/switchgear-640.webp" muted loop playsinline preload="none" aria-hidden="true">
+          <video poster="images/stock/switchgear-video-poster.webp" muted loop playsinline preload="none" aria-hidden="true">
             <source src="videos/switchgear.mp4" type="video/mp4">
           </video>
         </div>
@@ -207,9 +190,29 @@
           <h3>Switchgear &amp; Protection Devices</h3>
         </div>
       </a>
+      <a href="lighting.html" class="feat-card reveal">
+        <div class="feat-media">
+          <video poster="images/stock/lighting-video-poster.webp" muted loop playsinline preload="none" aria-hidden="true">
+            <source src="videos/lighting.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="feat-info">
+          <h3>Lighting Solutions</h3>
+        </div>
+      </a>
+      <a href="fans.html" class="feat-card reveal">
+        <div class="feat-media">
+          <video poster="images/stock/fans-video-poster.webp" muted loop playsinline preload="none" aria-hidden="true">
+            <source src="videos/fans.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="feat-info">
+          <h3>Fans &amp; Ventilation</h3>
+        </div>
+      </a>
       <a href="heaters.html" class="feat-card reveal">
         <div class="feat-media">
-          <video poster="images/stock/heaters-640.webp" muted loop playsinline preload="none" aria-hidden="true">
+          <video poster="images/stock/heaters-video-poster.webp" muted loop playsinline preload="none" aria-hidden="true">
             <source src="videos/heaters.mp4" type="video/mp4">
           </video>
         </div>
@@ -351,7 +354,7 @@
 <footer class="footer dark">
   <div class="footer-grid">
     <div class="footer-brand">
-      <div class="wordmark"><div class="bolt"><svg class="ic" aria-hidden="true"><use href="#i-bolt"/></svg></div>Esan Electric Company</div>
+      <div class="wordmark"><img class="nl-mark" src="images/esan-monogram.svg" width="44" height="44" alt=""><span class="nl-text"><b>ESAN</b><i>ELECTRICAL</i></span></div>
       <p>Comprehensive electrical solutions for residential, commercial and industrial needs, backed by trusted brands.</p>
       <a href="tel:+917200523519" class="footer-phone">+91 72005 23519</a>
     </div>
