@@ -276,7 +276,7 @@ CARD_PDFS = {
     # fans
     "fan-all-types-anchor":                                     f"{PDF_BASE}/fan-all-types-anchor.pdf",
     "fan-all-types-crompton":                                   f"{PDF_BASE}/fan-all-types-crompton.pdf",
-    "fans-smart-bldc-atomberg":                                 f"{PDF_BASE}/fans-smart-bldc-atomberg.pdf",
+    "fans-smart-bldc-atomberg":                                 f"{PDF_BASE}/Atomberg%20Fan%20Catalogue.pdf",
     "fans-ceiling-exhaust-wall-mount-cg":                       f"{PDF_BASE}/Fans-Ceiling-Exhaust-Wall-Mount-CG.pdf",
     "fans-industrial-wall-pedestal-ceiling-exhaust-fans-almonard": f"{PDF_BASE}/fans-industrial-wall-pedestal-ceiling-exhaust-fans-almonard.pdf",
     "decorative-fan-orient":                                    f"{PDF_BASE}/decorative-fan-orient.pdf",
@@ -284,6 +284,7 @@ CARD_PDFS = {
     "standard-lighting-philips":                                f"{PDF_BASE}/Domestic-Lighting-Philips.pdf",
     "decorative-lighting-philips":                              f"{PDF_BASE}/Domestic-Lighting-Philips.pdf",
     "industrial-lighting-philips":                              f"{PDF_BASE}/Professional-Lightings-Philips.pdf",
+    "led-lights-fittings-norwood":                              f"{PDF_BASE}/Norwood%20LED.pdf",
     # switches
     "allzy-legrand":                                            f"{PDF_BASE}/allzy-legrand.pdf",
     "myrius-legrand":                                           f"{PDF_BASE}/myrius-legrand.pdf",
@@ -292,7 +293,7 @@ CARD_PDFS = {
     # wires
     "house-wires-90-180-300-mtrs-finolex":                      f"{PDF_BASE}/House-Wires-90-180-300-Mtrs-Finolex.pdf",
     "house-wires-project-industry-rr-kabel":                    f"{PDF_BASE}/house-wires-project-industry-rr-kabel.pdf",
-    "house-wire-norwood":                                       f"{PDF_BASE}/house-wire-norwood.pdf",
+    "house-wire-norwood":                                       f"{PDF_BASE}/Norwood%20Wire%20%26%20Cable.pdf",
     "house-wires-90-180-mtrs-polycab":                          f"{PDF_BASE}/House-Wires-90-180-Mtrs-Polycab.pdf",
     "cable-orbit":                                              f"{PDF_BASE}/cable-orbit.pdf",
     "ht-cable-catalogue-polycab":                               f"{PDF_BASE}/HT-Cable-Catalogue-Polycab.pdf",
@@ -328,7 +329,7 @@ CATS = {
         "brands": [],
         "catalogs": [
             ("Orient Fans Catalogue 2025",            pdf_view(f"{PDF_BASE}/orient-fans-catalogue-2025.pdf")),
-            ("Atomberg Fans Catalogue — Summer 2026", pdf_view(f"{PDF_BASE}/atomberg-fans-catalogue-2026.pdf")),
+            ("Atomberg Fans Catalogue", pdf_view(f"{PDF_BASE}/Atomberg%20Fan%20Catalogue.pdf")),
             ("Crompton BLDC Ceiling Fans",            pdf_view(f"{PDF_BASE}/crompton-bldc-fans.pdf")),
             ("Crompton Fans Catalogue",               pdf_view(f"{PDF_BASE}/crompton-fans-catalogue.pdf")),
         ],
@@ -344,6 +345,7 @@ CATS = {
         "types": [
             ("All",  "Standard Lighting",   "images/Products/covers/philips-lighting-standard.jpg",  ["Philips"]),
             ("All",  "Industrial Lighting", "images/Products/covers/philips-lighting-industrial.jpg", ["Philips"]),
+            ("All",  "LED Lights &amp; Fittings", "images/Products/covers/norwood-led-01.jpg", ["Norwood"]),
         ],
         "brands": [],
         "catalogs": [
@@ -381,7 +383,7 @@ CATS = {
         "types": [
             ("Wire", "House Wires (90, 180 &amp; 300 Mtrs)", "images/Products/covers/finolex-wire-02.jpg", ["Finolex"]),
             ("Wire", "House Wires (Project &amp; Industry)", "images/Products/covers/rr-kabel-wire-01.jpg", ["RR Kabel"]),
-            ("Wire", "House Wire", "images/Products/covers/norwood-wire-01.jpg",   ["Norwood"]),
+            ("Wire", "House Wire", "images/Products/covers/norwood-wire-02.jpg",   ["Norwood"]),
             ("Wire", "House Wires (90 &amp; 180 Mtrs)",    "images/Products/covers/polycab-wire-box.jpg", ["Polycab"]),
             ("Cable", "Cable",     "images/Products/covers/orbit-cable-1.jpg",     ["Orbit"]),
             ("Cable", "HT Cable Catalogue", "images/Products/covers/polycab-ht-cable-01.jpg", ["Polycab"]),
@@ -391,7 +393,7 @@ CATS = {
             ("Finolex Cables Price List — Oct 2026",           pdf_view(f"{PDF_BASE}/finolex-cables-pricelist-2026.pdf")),
             ("RR Kabel Price List (Project &amp; Industry)",   pdf_view(f"{PDF_BASE}/rr-kabel-pricelist.pdf")),
             ("Orbit Cables Price List",                        pdf_view(f"{PDF_BASE}/orbit-cables-pricelist.pdf")),
-            ("Norwood Wire &amp; Cable Price List — Aug 2026", pdf_view(f"{PDF_BASE}/norwood-wire-cable-pricelist-2026.pdf")),
+            ("Norwood Wire &amp; Cable Price List — Nov 2026", pdf_view(f"{PDF_BASE}/Norwood%20Wire%20%26%20Cable.pdf")),
         ],
     },
     "switchgear": {
