@@ -51,12 +51,12 @@ We sell five categories: fans (ceiling, BLDC, exhaust, table and pedestal), wire
 Bose Electrical is the retail-facing shop at the same premises. Esan Electric operates as the wholesale supply side of the business from that location. The address and directions are the same — walk into Bose Electrical and ask for wholesale enquiries.
 
 ## Pages
-- [index.html](https://mano181.github.io/StoreSite/)
-- [products.html](https://mano181.github.io/StoreSite/products.html)
-- [switches.html](https://mano181.github.io/StoreSite/switches.html)
-- [wires.html](https://mano181.github.io/StoreSite/wires.html)
-- [switchgear.html](https://mano181.github.io/StoreSite/switchgear.html)
-- [lighting.html](https://mano181.github.io/StoreSite/lighting.html)
-- [fans.html](https://mano181.github.io/StoreSite/fans.html)
-- [heaters.html](https://mano181.github.io/StoreSite/heaters.html)
-- [contact.html](https://mano181.github.io/StoreSite/contact.html)
+- [/](https://esanelectrical.pages.dev/)
+- [/products/](https://esanelectrical.pages.dev/products/)
+- [/products/switches](https://esanelectrical.pages.dev/products/switches)
+- [/products/wires](https://esanelectrical.pages.dev/products/wires)
+- [/products/switchgear](https://esanelectrical.pages.dev/products/switchgear)
+- [/products/lighting](https://esanelectrical.pages.dev/products/lighting)
+- [/products/fans](https://esanelectrical.pages.dev/products/fans)
+- [/products/heaters](https://esanelectrical.pages.dev/products/heaters)
+- [/contact/](https://esanelectrical.pages.dev/contact/)

@@ -10,8 +10,13 @@ instead of editing every page. css/ and js/ are NOT generated.
 OUT = pathlib.Path(__file__).resolve().parent.parent
 # Set to the real site URL (no trailing slash), e.g. "https://www.example.com", once hosting is chosen.
 # While empty, canonical/og:url, absolute URLs in structured data, sitemap.xml, robots.txt and llms.txt are omitted.
-DOMAIN = "https://mano181.github.io/StoreSite"
-PDF_BASE = "https://mano181.github.io/StoreSite/pdfs"
+DOMAIN = "https://esanelectrical.pages.dev"
+PDF_BASE = "pdfs"
+
+def U(path):
+    """Output file path -> public URL (Cloudflare Pages): index.html -> /, products/index.html -> /products/, products/fans.html -> /products/fans."""
+    p = path[:-5]
+    return "/" if p == "index" else "/" + (p[:-5] if p.endswith("/index") else p)
 
 def pdf_view(url):
     return url
@@ -118,10 +123,9 @@ def head(title, desc, path, jsonld=None, noindex=False, og_image=None):
     for block in (jsonld or []):
         ld += f'\n  <script type="application/ld+json">\n{json.dumps(block, indent=2, ensure_ascii=False)}\n  </script>'
     robots = '\n  <meta name="robots" content="noindex"/>' if noindex else ""
-    canon_path = "" if path == "index.html" else path
-    canon = "" if noindex or not DOMAIN else f'\n  <link rel="canonical" href="{DOMAIN}/{canon_path}"/>'
-    og_url = f'\n  <meta property="og:url" content="{DOMAIN}/{canon_path}"/>' if DOMAIN else ""
-    _og_img = og_image or "images/hero-slide-1.jpg"
+    canon = "" if noindex or not DOMAIN else f'\n  <link rel="canonical" href="{DOMAIN}{U(path)}"/>'
+    og_url = f'\n  <meta property="og:url" content="{DOMAIN}{U(path)}"/>' if DOMAIN else ""
+    _og_img = og_image or "images/og-image.jpg"
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -175,16 +179,16 @@ def nav(active):
     <ul class="nav-links" id="site-menu">
 {a("index.html", "Home", "home")}
       <li class="has-drop">
-        <a href="products.html"{' class="active" aria-current="page"' if active == "products" else ""}>Products</a>
+        <a href="products/index.html"{' class="active" aria-current="page"' if active == "products" else ""}>Products</a>
         <ul class="drop">
 {drop_items}
         </ul>
       </li>
-{a("contact.html", "Contact", "contact")}
+{a("contact/index.html", "Contact", "contact")}
       <li class="drawer-actions"><a href="tel:{PHONE_TEL}" class="da-call">{ic("phone")} Call</a><a href="{WA}" target="_blank" rel="noopener" class="da-wa">{ic("chat")} WhatsApp</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="contact.html" class="btn-teal">Get in Touch</a>
+      <a href="contact/index.html" class="btn-teal">Get in Touch</a>
     </div>
     <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span><span></span><span></span></button>
   </div>
@@ -204,21 +208,21 @@ FOOTER = f'''
       <h4>Quick Links</h4>
       <ul class="footer-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="products.html">Products</a></li>
-        <li><a href="fans.html">Fans &amp; Ventilation</a></li>
-        <li><a href="wires.html">Wires &amp; Cables</a></li>
-        <li><a href="lighting.html">Lighting Solutions</a></li>
-        <li><a href="switchgear.html">Switchgear &amp; Protection Devices</a></li>
-        <li><a href="heaters.html">Water Heaters</a></li>
-        <li><a href="switches.html">Switches &amp; Accessories</a></li>
-        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="products/index.html">Products</a></li>
+        <li><a href="products/fans.html">Fans &amp; Ventilation</a></li>
+        <li><a href="products/wires.html">Wires &amp; Cables</a></li>
+        <li><a href="products/lighting.html">Lighting Solutions</a></li>
+        <li><a href="products/switchgear.html">Switchgear &amp; Protection Devices</a></li>
+        <li><a href="products/heaters.html">Water Heaters</a></li>
+        <li><a href="products/switches.html">Switches &amp; Accessories</a></li>
+        <li><a href="contact/index.html">Contact Us</a></li>
       </ul>
     </div>
     <div>
       <h4>Contact</h4>
       <ul class="footer-contact">
         <li><a href="mailto:{EMAIL}">{ic("mail")} {EMAIL}</a></li>
-        <li><a href="contact.html">{ic("pin")} Karaikal, Puducherry</a></li>
+        <li><a href="contact/index.html">{ic("pin")} Karaikal, Puducherry</a></li>
       </ul>
     </div>
   </div>
@@ -276,7 +280,7 @@ CARD_PDFS = {
     # fans
     "fan-all-types-anchor":                                     f"{PDF_BASE}/fan-all-types-anchor.pdf",
     "fan-all-types-crompton":                                   f"{PDF_BASE}/fan-all-types-crompton.pdf",
-    "fans-smart-bldc-atomberg":                                 f"{PDF_BASE}/Atomberg%20Fan%20Catalogue.pdf",
+    "fans-smart-bldc-atomberg":                                 f"{PDF_BASE}/atomberg-fan-catalogue.pdf",
     "fans-ceiling-exhaust-wall-mount-cg":                       f"{PDF_BASE}/Fans-Ceiling-Exhaust-Wall-Mount-CG.pdf",
     "fans-industrial-wall-pedestal-ceiling-exhaust-fans-almonard": f"{PDF_BASE}/fans-industrial-wall-pedestal-ceiling-exhaust-fans-almonard.pdf",
     "decorative-fan-orient":                                    f"{PDF_BASE}/decorative-fan-orient.pdf",
@@ -284,7 +288,7 @@ CARD_PDFS = {
     "standard-lighting-philips":                                f"{PDF_BASE}/Domestic-Lighting-Philips.pdf",
     "decorative-lighting-philips":                              f"{PDF_BASE}/Domestic-Lighting-Philips.pdf",
     "industrial-lighting-philips":                              f"{PDF_BASE}/Professional-Lightings-Philips.pdf",
-    "led-lights-fittings-norwood":                              f"{PDF_BASE}/Norwood%20LED.pdf",
+    "led-lights-fittings-norwood":                              f"{PDF_BASE}/norwood-led.pdf",
     # switches
     "allzy-legrand":                                            f"{PDF_BASE}/allzy-legrand.pdf",
     "myrius-legrand":                                           f"{PDF_BASE}/myrius-legrand.pdf",
@@ -293,7 +297,7 @@ CARD_PDFS = {
     # wires
     "house-wires-90-180-300-mtrs-finolex":                      f"{PDF_BASE}/House-Wires-90-180-300-Mtrs-Finolex.pdf",
     "house-wires-project-industry-rr-kabel":                    f"{PDF_BASE}/house-wires-project-industry-rr-kabel.pdf",
-    "house-wire-norwood":                                       f"{PDF_BASE}/Norwood%20Wire%20%26%20Cable.pdf",
+    "house-wire-norwood":                                       f"{PDF_BASE}/norwood-wire-cable.pdf",
     "house-wires-90-180-mtrs-polycab":                          f"{PDF_BASE}/House-Wires-90-180-Mtrs-Polycab.pdf",
     "cable-orbit":                                              f"{PDF_BASE}/cable-orbit.pdf",
     "ht-cable-catalogue-polycab":                               f"{PDF_BASE}/HT-Cable-Catalogue-Polycab.pdf",
@@ -310,7 +314,7 @@ CARD_PDFS = {
 # ── Products: each category lists `types` x `brands`; a card is made for every pair. Groups feed the filter tabs. ──
 CATS = {
     "fans": {
-        "file": "fans.html", "label": "Fans & Ventilation", "icon": "fan", "img": "images/stock/fans.jpg",
+        "file": "products/fans.html", "label": "Fans & Ventilation", "icon": "fan", "img": "images/stock/fans.jpg",
         "video": "RE2KY74dWqc",
         "blurb": "Ceiling, BLDC, exhaust, table &amp; pedestal fans",
         "title": "Wholesale Fans in Karaikal & Tamil Nadu — Ceiling, BLDC, Exhaust | Esan Electric",
@@ -327,15 +331,9 @@ CATS = {
             ("Decorative", "Decorative Fan", "images/Products/covers/orient-fans-001.jpg",        ["Orient"]),
         ],
         "brands": [],
-        "catalogs": [
-            ("Orient Fans Catalogue 2025",            pdf_view(f"{PDF_BASE}/orient-fans-catalogue-2025.pdf")),
-            ("Atomberg Fans Catalogue", pdf_view(f"{PDF_BASE}/Atomberg%20Fan%20Catalogue.pdf")),
-            ("Crompton BLDC Ceiling Fans",            pdf_view(f"{PDF_BASE}/crompton-bldc-fans.pdf")),
-            ("Crompton Fans Catalogue",               pdf_view(f"{PDF_BASE}/crompton-fans-catalogue.pdf")),
-        ],
     },
     "lighting": {
-        "file": "lighting.html", "label": "Lighting Solutions", "icon": "bulb", "img": "images/stock/lighting.jpg",
+        "file": "products/lighting.html", "label": "Lighting Solutions", "icon": "bulb", "img": "images/stock/lighting.jpg",
         "video": "StcpNahIIos",
         "blurb": "Bulbs, tubes, downlights &amp; battens",
         "title": "Wholesale LED Lights, Bulbs & Tubes in Karaikal & Tamil Nadu | Esan Electric",
@@ -348,13 +346,9 @@ CATS = {
             ("All",  "LED Lights &amp; Fittings", "images/Products/covers/norwood-led-01.jpg", ["Norwood"]),
         ],
         "brands": [],
-        "catalogs": [
-            ("Philips Domestic Lighting",      pdf_view(f"{PDF_BASE}/Domestic-Lighting-Philips.pdf")),
-            ("Philips Professional Lighting",  pdf_view(f"{PDF_BASE}/Professional-Lightings-Philips.pdf")),
-        ],
     },
     "switches": {
-        "file": "switches.html", "label": "Switches & Accessories", "icon": "switch", "img": "images/stock/switches.jpg",
+        "file": "products/switches.html", "label": "Switches & Accessories", "icon": "switch", "img": "images/stock/switches.jpg",
         "video": "dmk7sjuuM6E",
         "blurb": "Modular switches &amp; accessories",
         "title": "Wholesale Switches & Accessories in Karaikal & Tamil Nadu | Esan Electric",
@@ -368,12 +362,9 @@ CATS = {
             ("All", "Anchor Switches", "images/Products/covers/anchor-switches-01.jpg", ["Anchor"]),
         ],
         "brands": [],
-        "catalogs": [
-            ("Anchor Metal Boxes Price List", pdf_view(f"{PDF_BASE}/anchor-metal-boxes-pricelist.pdf")),
-        ],
     },
     "wires": {
-        "file": "wires.html", "label": "Wires & Cables", "icon": "plug", "img": "images/stock/wires.jpg",
+        "file": "products/wires.html", "label": "Wires & Cables", "icon": "plug", "img": "images/stock/wires.jpg",
         "video": "dKHI52dC7j0",
         "blurb": "Copper wire and cables by the roll",
         "title": "Bulk Electrical Wires & Cables Supplier in Karaikal & Tamil Nadu | Esan Electric",
@@ -389,15 +380,9 @@ CATS = {
             ("Cable", "HT Cable Catalogue", "images/Products/covers/polycab-ht-cable-01.jpg", ["Polycab"]),
         ],
         "brands": [],
-        "catalogs": [
-            ("Finolex Cables Price List — Oct 2026",           pdf_view(f"{PDF_BASE}/finolex-cables-pricelist-2026.pdf")),
-            ("RR Kabel Price List (Project &amp; Industry)",   pdf_view(f"{PDF_BASE}/rr-kabel-pricelist.pdf")),
-            ("Orbit Cables Price List",                        pdf_view(f"{PDF_BASE}/orbit-cables-pricelist.pdf")),
-            ("Norwood Wire &amp; Cable Price List — Nov 2026", pdf_view(f"{PDF_BASE}/Norwood%20Wire%20%26%20Cable.pdf")),
-        ],
     },
     "switchgear": {
-        "file": "switchgear.html", "label": "Switchgear & Protection Devices", "icon": "switch", "img": "images/stock/switchgear.jpg",
+        "file": "products/switchgear.html", "label": "Switchgear & Protection Devices", "icon": "switch", "img": "images/stock/switchgear.jpg",
         "video": "uXgtDtYxHdk",
         "blurb": "Distribution boards, MCBs &amp; RCCBs",
         "title": "Wholesale Distribution Boards & MCB in Karaikal & Tamil Nadu | Esan Electric",
@@ -414,7 +399,7 @@ CATS = {
         "brands": [],
     },
     "heaters": {
-        "file": "heaters.html", "label": "Water Heaters", "icon": "heater", "img": "images/stock/heaters.jpg",
+        "file": "products/heaters.html", "label": "Water Heaters", "icon": "heater", "img": "images/stock/heaters.jpg",
         "video": "VzTQTrrfJXc",
         "blurb": "Storage and instant water heaters",
         "title": "Wholesale Water Heaters in Karaikal & Tamil Nadu | Esan Electric",
@@ -427,10 +412,6 @@ CATS = {
             ("All", "Water Heater", "images/Products/covers/crompton-heater-web.jpg", ["Crompton"]),
         ],
         "brands": [],
-        "catalogs": [
-            ("Venus Splash Pro — Catalogue",    pdf_view(f"{PDF_BASE}/venus-splash-pro-catalogue.pdf")),
-            ("Venus Splash Copper — Catalogue", pdf_view(f"{PDF_BASE}/venus-splash-copper-catalogue.pdf")),
-        ],
     },
 }
 # Display order on the site (nav menus, home cards, products page, sitemap)
@@ -483,8 +464,8 @@ def category_page(key):
     if DOMAIN:
         ld.append({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{DOMAIN}/"},
-            {"@type": "ListItem", "position": 2, "name": "Products", "item": f"{DOMAIN}/products.html"},
-            {"@type": "ListItem", "position": 3, "name": c["label"], "item": f"{DOMAIN}/{c['file']}"}]})
+            {"@type": "ListItem", "position": 2, "name": "Products", "item": f"{DOMAIN}{U('products/index.html')}"},
+            {"@type": "ListItem", "position": 3, "name": c["label"], "item": f"{DOMAIN}{U(c['file'])}"}]})
     s = head(c["title"], c["desc"], c["file"], ld, og_image=c["img"]) + nav("products")
     s += page_hero("", c["h1"], c["lead"])
     groups = list(dict.fromkeys(t[0] for t in c["types"]))
@@ -502,7 +483,7 @@ def category_page(key):
         s += "\n".join(product_card(key, *b) for b in cards)
     s += '    </div>\n'
     wa_text = quote(f"Hi Esan Electric, I would like wholesale rates for {c['label']}.")
-    s += '''    <p class="back-link"><a href="products.html">← All categories</a></p>
+    s += '''    <p class="back-link"><a href="products/index.html">← All categories</a></p>
   </div>
 </section>
 </main>
@@ -557,7 +538,7 @@ def video_grid():
 def products_page():
     s = head("Wholesale Fans, Wires & LED Lighting — Product Range | Esan Electric, Karaikal",
              "Browse Esan Electric's wholesale range in Karaikal: fans, wires and cables, LED lighting, MCB switchgear and water heaters for retail shops, dealers and contractors across Puducherry and Tamil Nadu.",
-             "products.html") + nav("products")
+             "products/index.html") + nav("products")
     s += f'''
 <main id="main">
 <section class="categories products-section--top">
@@ -648,7 +629,7 @@ def index_page():
       <h1>Quality<br>Electricals<br><span class="hl">Right Price.{uline}</span></h1>
       <p class="hero-sub">Comprehensive electrical solutions for residential, commercial and industrial needs, backed by trusted brands and dependable supply.</p>
       <div class="hero-btns">
-        <a href="products.html" class="btn-hero-primary">Browse Products {ic("arrow")}</a>
+        <a href="products/index.html" class="btn-hero-primary">Browse Products {ic("arrow")}</a>
       </div>
     </div>
     <div class="hero-media">
@@ -664,7 +645,7 @@ def index_page():
         <span class="docket-eyebrow">Featured products</span>
         <h2 class="wipe">What we supply.</h2>
       </div>
-      <a href="products.html" class="text-link">View all products {ic("arrow")}</a>
+      <a href="products/index.html" class="text-link">View all products {ic("arrow")}</a>
     </div>
     <div class="featured-grid">
 {video_grid()}    </div>
@@ -710,7 +691,7 @@ def index_page():
       <p>Tell us what you need and the quantity. We reply with rates within an hour.</p>
       <a href="{WA}" target="_blank" rel="noopener" class="cta-wa">{ic("chat")} Or message us on WhatsApp</a>
     </div>
-    <a href="contact.html" class="cta-circle">Get in Touch {ic("arrow")}</a>
+    <a href="contact/index.html" class="cta-circle">Get in Touch {ic("arrow")}</a>
   </div>
 </section>
 </main>
@@ -778,7 +759,7 @@ def wholesale_page():
     for q, a in FAQ:
         s += f'      <details><summary>{html.escape(q)}</summary><p>{html.escape(a)}</p></details>\n'
     s += '''    </div>
-    <p style="margin-top:32px;"><a href="contact.html" class="btn-teal">Get Our Rate Sheet</a></p>
+    <p style="margin-top:32px;"><a href="contact/index.html" class="btn-teal">Get Our Rate Sheet</a></p>
   </div>
 </section>
 </main>
@@ -793,7 +774,7 @@ def contact_page():
         "name": NAME,
         "telephone": PHONE_TEL,
         "email": EMAIL,
-        "url": f"{DOMAIN}/contact.html" if DOMAIN else "",
+        "url": f"{DOMAIN}{U('contact/index.html')}" if DOMAIN else "",
         "address": ORG["address"],
         "geo": {"@type": "GeoCoordinates", "latitude": 10.932017, "longitude": 79.830166},
         "openingHoursSpecification": {
@@ -806,7 +787,7 @@ def contact_page():
                         "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ]}
     s = head("Contact Esan Electric Karaikal — Request Wholesale Rates in Puducherry & Tamil Nadu",
              "Send a wholesale enquiry to Esan Electric in Karaikal for fans, wires, LED lighting, MCB switchgear and water heaters. Call, WhatsApp or use the form. We reply within an hour.",
-             "contact.html", [local_biz, faq_schema]) + nav("contact")
+             "contact/index.html", [local_biz, faq_schema]) + nav("contact")
     s += page_hero("Contact Us", "Get in Touch",
                    "Tell us what you need and how much. <strong class=\"reply\">We reply within an hour.</strong>")
     s += f'''
@@ -936,24 +917,32 @@ def not_found_page():
     return s + FOOTER
 
 
-files = {"index.html": index_page(), "products.html": products_page(),
-         "contact.html": contact_page(),
+files = {"index.html": index_page(), "products/index.html": products_page(),
+         "contact/index.html": contact_page(),
          "404.html": not_found_page()}
 for k, c in CATS.items():
     files[c["file"]] = category_page(k)
+def finalize(s):
+    """Pages live in subfolders, so use root-absolute asset paths and clean-URL page links."""
+    s = re.sub(r'(?<=["\s,])((?:images|fonts|css|js|videos|pdfs)/)', r'/\1', s)
+    s = re.sub(r'(href=")(favicon\.svg|favicon-32\.png|favicon\.ico|apple-touch-icon\.png)', r'\1/\2', s)
+    return re.sub(r'href="([^"#]+\.html)(#[^"]*)?"',
+                  lambda m: f'href="{U(m[1]) if m[1] in files else m[1]}{m[2] or ""}"', s)
+
 for name, content in files.items():
-    (OUT / name).write_text(content, encoding="utf-8", newline="\n")
+    (OUT / name).parent.mkdir(parents=True, exist_ok=True)
+    (OUT / name).write_text(finalize(content), encoding="utf-8", newline="\n")
 
 # favicon = the E monogram (images/esan-monogram.svg is hand-authored)
 (OUT / "favicon.svg").write_text((OUT / "images/esan-monogram.svg").read_text(encoding="utf-8"), encoding="utf-8", newline="\n")
 
 # ── root files ──
-pages = ["index.html", "products.html"] + [c["file"] for c in CATS.values()] + ["contact.html"]
+pages = ["index.html", "products/index.html"] + [c["file"] for c in CATS.values()] + ["contact/index.html"]
 root_files = {}
 if DOMAIN:
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     for p in pages:
-        loc = f"{DOMAIN}/" if p == "index.html" else f"{DOMAIN}/{p}"
+        loc = f"{DOMAIN}{U(p)}"
         sm += f"  <url><loc>{loc}</loc></url>\n"
     root_files["sitemap.xml"] = sm + "</urlset>\n"
     root_files["robots.txt"] = f"User-agent: *\nAllow: /\n\nSitemap: {DOMAIN}/sitemap.xml\n"
@@ -988,7 +977,7 @@ if DOMAIN:
         "## Frequently asked questions\n"
         + "".join(f"### {q}\n{a}\n\n" for q, a in FAQ)
         + "## Pages\n"
-        + "".join(f"- [{p}]({DOMAIN}/{'index.html' if p == 'index.html' else p})\n".replace(f"{DOMAIN}/index.html", f"{DOMAIN}/") for p in pages))
+        + "".join(f"- [{U(p)}]({DOMAIN}{U(p)})\n" for p in pages))
 for name in ("sitemap.xml", "robots.txt", "llms.txt"):
     f = OUT / name
     if name in root_files:

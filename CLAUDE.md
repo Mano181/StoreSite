@@ -28,7 +28,7 @@ python tools/build_pages.py
 - **`tools/build_pages.py`** — Python code-gen script. All page content, product data, and shared chrome (nav, footer, icons) live here. Functions like `head()`, `nav()`, and page-specific builders produce HTML strings written to files.
 - **`CSS/style.css`** — Single stylesheet, hand-authored. Uses CSS custom properties for design tokens (colors, spacing, easing, durations). No CSS framework.
 - **`js/main.js`** — Single JS file, hand-authored. Handles navbar scroll behavior, mobile drawer, scroll-reveal animations, product filtering, contact form (Web3Forms), and business-hours status chip. No JS libraries.
-- **`*.html`** — Generated output. 9 pages total (index, products, 5 category pages, wholesale, contact) plus a static 404.html.
+- **`index.html`, `404.html`, `products/*.html`, `contact/index.html`** — Generated output (never hand-edit). Category pages live in `products/`; on Cloudflare Pages they are served as `/products/`, `/products/fans`, `/contact/`, etc. Hosting: Cloudflare Pages, build command `python tools/build_pages.py && mkdir -p dist && cp -R index.html 404.html products contact css js fonts images videos pdfs favicon.* favicon-32.png apple-touch-icon.png sitemap.xml robots.txt llms.txt _headers dist/`, output dir `dist`; cache rules live in `_headers` Internal links and asset paths are root-absolute, rewritten by `finalize()` in the build script. Preview locally with `python tools/serve.py` (plain `http.server` does not support clean URLs).
 
 ## Key Patterns
 

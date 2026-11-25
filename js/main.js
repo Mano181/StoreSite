@@ -36,9 +36,10 @@ document.addEventListener('click', e => {
 });
 
 // ── Active nav link ──
-const page = window.location.pathname.split('/').pop() || 'index.html';
+const normPath = p => p.replace(/(.)\/$/, '$1').replace(/\.html$/, '');
+const page = normPath(window.location.pathname);
 document.querySelectorAll('.nav-links a, .footer-links a').forEach(a => {
-  if (a.getAttribute('href') === page) a.classList.add('active');
+  if (normPath(a.getAttribute('href')) === page) a.classList.add('active');
 });
 
 // ── Scroll reveal (stagger within each parent group) ──
