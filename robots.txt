@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://esanelectrical.pages.dev/sitemap.xml
+Sitemap: https://esanelectrical.boseelectrical-karaikal.workers.dev/sitemap.xml

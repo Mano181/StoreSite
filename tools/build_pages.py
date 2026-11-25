@@ -10,7 +10,7 @@ instead of editing every page. css/ and js/ are NOT generated.
 OUT = pathlib.Path(__file__).resolve().parent.parent
 # Set to the real site URL (no trailing slash), e.g. "https://www.example.com", once hosting is chosen.
 # While empty, canonical/og:url, absolute URLs in structured data, sitemap.xml, robots.txt and llms.txt are omitted.
-DOMAIN = "https://esanelectrical.pages.dev"
+DOMAIN = "https://esanelectrical.boseelectrical-karaikal.workers.dev"
 PDF_BASE = "pdfs"
 
 def U(path):
