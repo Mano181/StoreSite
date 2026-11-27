@@ -44,6 +44,7 @@ BRAND_STYLE = {
     # Wordmarks (no official logo found online)
     "Kavaski": ("images/brands/kavaski.png", None),  # official logo; primary blue #00A0E3, accent red #FF2A03
     "Philips": (None, "#0071c2"),
+    "Panasonic": (None, "#0041c0"),
     "Lisha":    (None, "#cc0000"),
     "Paragon":  (None, "#555555"),
     "Orbit":    (None, "#2A7C51"),
@@ -289,6 +290,7 @@ CARD_PDFS = {
     "decorative-lighting-philips":                              f"{PDF_BASE}/Domestic-Lighting-Philips.pdf",
     "industrial-lighting-philips":                              f"{PDF_BASE}/Professional-Lightings-Philips.pdf",
     "led-lights-fittings-norwood":                              f"{PDF_BASE}/norwood-led.pdf",
+    "led-lighting-panasonic":                                   f"{PDF_BASE}/panasonic-led-lighting.pdf",
     # switches
     "allzy-legrand":                                            f"{PDF_BASE}/allzy-legrand.pdf",
     "myrius-legrand":                                           f"{PDF_BASE}/myrius-legrand.pdf",
@@ -344,6 +346,7 @@ CATS = {
             ("All",  "Standard Lighting",   "images/Products/covers/philips-lighting-standard.jpg",  ["Philips"]),
             ("All",  "Industrial Lighting", "images/Products/covers/philips-lighting-industrial.jpg", ["Philips"]),
             ("All",  "LED Lights &amp; Fittings", "images/Products/covers/norwood-led-01.jpg", ["Norwood"]),
+            ("All",  "LED Lighting", "images/Products/covers/panasonic-led-01.jpg", ["Panasonic"]),
         ],
         "brands": [],
     },
@@ -957,12 +960,12 @@ if DOMAIN:
         f"- Email: {EMAIL}\n"
         f"- WhatsApp: {WA}\n\n"
         "## Brands we stock\n"
-        "Crompton, Anchor, Atomberg, Orient, CG, Almonard, Philips, Legrand, Kavaski, "
+        "Crompton, Anchor, Atomberg, Orient, CG, Almonard, Philips, Panasonic, Legrand, Kavaski, "
         "Finolex, RR Kabel, Polycab, Norwood, Orbit, Venus, V-Guard, L&T\n\n"
         "## What we sell\n"
         "- Fans: ceiling (standard, BLDC, designer, high-speed), exhaust, table and pedestal fans — Crompton, Anchor, Atomberg, Orient, CG, Almonard\n"
         "- Wires & cables: copper house wire by the roll and in bulk — Finolex, RR Kabel, Polycab, Norwood, Orbit\n"
-        "- Lighting: LED bulbs, tube lights, downlights and battens — Philips\n"
+        "- Lighting: LED bulbs, tube lights, downlights and battens — Philips, Panasonic\n"
         "- Switches & accessories: modular switches — Legrand, Kavaski, Anchor\n"
         "- MCB & switchgear: MCBs, MCCBs, RCCBs, isolators and distribution boards — Legrand\n"
         "- Water heaters: storage and instant — Venus, V-Guard, Crompton\n\n"
